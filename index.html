@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B4EA2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dist Connect">
+<meta name="robots" content="noindex">
+<title>Distributor Connect</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23fff'/%3E%3Crect x='14' y='6' width='36' height='52' rx='12' fill='%230B4EA2'/%3E%3Crect x='20' y='42' width='24' height='6' rx='3' fill='%23C8102E'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23fff'/%3E%3Crect x='14' y='6' width='36' height='52' rx='12' fill='%230B4EA2'/%3E%3Crect x='20' y='42' width='24' height='6' rx='3' fill='%23C8102E'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#EEF1F5;--surface:#FFFFFF;--sunk:#F6F8FB;--ink:#14213D;--muted:#5A6477;--line:#D6DCE6;
+  --brand:#0B4EA2;--brand-soft:#E3ECF8;--onbrand:#FFFFFF;--stripe:#C8102E;
+  --red:#B00E28;--red-soft:#FBE6E9;--amber:#8F5400;--amber-soft:#FDF0D9;
+  --green:#1C7445;--green-soft:#E1F3E8;--violet:#5B3FA6;--violet-soft:#ECE7F8;
+  --teal:#0E6E7A;--teal-soft:#DFF2F4;--focus:#F2A900;--overlay:rgba(20,33,61,.45);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1524;--surface:#16213A;--sunk:#111B30;--ink:#E7ECF5;--muted:#9AA7BC;--line:#2A3854;
+    --brand:#4C8FE6;--brand-soft:#1C2F52;--onbrand:#08142A;--stripe:#E5455C;
+    --red:#FF8A9A;--red-soft:#3A1A24;--amber:#F2B65C;--amber-soft:#3A2C14;
+    --green:#6FD39C;--green-soft:#15352A;--violet:#B6A2F0;--violet-soft:#2A2448;
+    --teal:#6CD0DB;--teal-soft:#123338;--overlay:rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1524;--surface:#16213A;--sunk:#111B30;--ink:#E7ECF5;--muted:#9AA7BC;--line:#2A3854;
+  --brand:#4C8FE6;--brand-soft:#1C2F52;--onbrand:#08142A;--stripe:#E5455C;
+  --red:#FF8A9A;--red-soft:#3A1A24;--amber:#F2B65C;--amber-soft:#3A2C14;
+  --green:#6FD39C;--green-soft:#15352A;--violet:#B6A2F0;--violet-soft:#2A2448;
+  --teal:#6CD0DB;--teal-soft:#123338;--overlay:rgba(0,0,0,.6);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Hind,"Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+h1,h2,h3,.rid,.brandmark,.tile b,.bigpin{font-family:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif}
+h1{font-size:1.75rem;line-height:1.15;margin:0;font-weight:700}
+h2{font-size:1.4rem;line-height:1.2;margin:0;font-weight:600}
+h3{font-size:1.15rem;margin:1.5rem 0 .5rem;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--brand);color:var(--onbrand);border-bottom:4px solid var(--stripe)}
+.bar-in{max-width:1040px;margin:0 auto;padding:.6rem 1rem;display:flex;align-items:center;gap:.75rem}
+.brandmark{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1.2rem}
+.mark{width:22px;height:28px;border-radius:7px 7px 4px 4px;background:var(--onbrand);position:relative;flex:none}
+.mark::after{content:"";position:absolute;left:3px;right:3px;bottom:5px;height:4px;border-radius:2px;background:var(--stripe)}
+.bar .who{margin-left:auto;font-size:.9rem;opacity:.92;text-align:right;line-height:1.2}
+.bar button{background:transparent;border:1.5px solid currentColor;border-radius:8px;padding:.3rem .7rem;cursor:pointer;color:var(--onbrand)}
+
+.wrap{max-width:1040px;margin:0 auto;padding:1.25rem 1rem 3rem}
+.hello{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}
+
+.btn{border-radius:10px;padding:.6rem 1.05rem;font-weight:600;cursor:pointer;background:var(--sunk);border:1px solid var(--line)}
+.btn.primary{background:var(--brand);color:var(--onbrand);border-color:var(--brand)}
+.btn.ok{background:var(--green);color:var(--surface);border-color:var(--green)}
+.btn.warn{background:var(--amber);color:var(--surface);border-color:var(--amber)}
+.btn.bad{background:var(--red);color:var(--surface);border-color:var(--red)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:.35rem .7rem;font-size:.9rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{background:none;border:0;color:var(--brand);text-decoration:underline;cursor:pointer;padding:0;font-size:.95rem}
+
+.c-brand{--c:var(--brand);--cs:var(--brand-soft)}
+.c-violet{--c:var(--violet);--cs:var(--violet-soft)}
+.c-amber{--c:var(--amber);--cs:var(--amber-soft)}
+.c-teal{--c:var(--teal);--cs:var(--teal-soft)}
+.c-green{--c:var(--green);--cs:var(--green-soft)}
+.c-red{--c:var(--red);--cs:var(--red-soft)}
+.c-grey{--c:var(--muted);--cs:var(--sunk)}
+.chip{display:inline-block;padding:.05rem .55rem;border-radius:999px;background:var(--cs);color:var(--c);font-size:.82rem;font-weight:600;white-space:nowrap;vertical-align:middle}
+
+.tabs{display:flex;gap:.25rem;border-bottom:2px solid var(--line);margin-bottom:1.25rem;overflow-x:auto}
+.tabs button{border:0;background:none;padding:.6rem .9rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-current="page"]{color:var(--brand);border-bottom-color:var(--brand)}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:.6rem;margin-bottom:1rem}
+.tile{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;cursor:pointer;border-top:4px solid var(--c,var(--line))}
+.tile b{display:block;font-size:2rem;line-height:1;color:var(--c,var(--ink))}
+.tile span{font-size:.9rem;color:var(--muted)}
+.tile[aria-pressed="true"]{background:var(--cs,var(--sunk));outline:2px solid var(--c,var(--ink));outline-offset:-2px}
+
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.5rem;margin-bottom:1rem}
+.filters select,.filters input{width:100%;padding:.55rem .7rem;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+
+.seg{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.35rem .9rem;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+.list{display:flex;flex-direction:column;gap:.5rem}
+.row{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:10px;padding:.75rem .9rem;cursor:pointer}
+.row:hover{background:var(--sunk)}
+.row-top{display:flex;justify-content:space-between;gap:.5rem;align-items:center;flex-wrap:wrap}
+.rid{font-weight:700;font-size:1.05rem;letter-spacing:.02em}
+.row-title{margin-top:.1rem;font-weight:500}
+.row-meta{font-size:.88rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.2rem 1rem;margin-top:.15rem}
+.late{color:var(--red);font-weight:600}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:2rem 1rem;text-align:center;color:var(--muted)}
+.empty .btn{margin-top:.75rem}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.75rem .9rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.75rem}
+.item .grow{flex:1 1 320px;min-width:0}
+.toggles{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.sw{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem .2rem .45rem;cursor:pointer;font-size:.9rem;background:var(--sunk)}
+.sw input{width:1.05rem;height:1.05rem;accent-color:var(--brand);margin:0}
+.sw:has(input:checked){background:var(--brand-soft);border-color:var(--brand);color:var(--brand);font-weight:600}
+
+.login{min-height:100%;display:grid;place-items:center;padding:2rem 1rem}
+.login-card{width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.5rem;border-top:6px solid var(--brand)}
+.login-card .brandmark{color:var(--brand);font-size:1.6rem}
+.login-card .brandmark .mark{background:var(--brand)}
+.hint{margin-top:1rem;font-size:.85rem;color:var(--muted);background:var(--sunk);border-radius:8px;padding:.5rem .7rem}
+
+.field{display:block;margin-bottom:.85rem}
+.field>span{display:block;font-weight:500;margin-bottom:.25rem}
+.field input,.field select,.field textarea{width:100%;padding:.6rem .75rem;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.field textarea{min-height:5rem;resize:vertical}
+.field small{color:var(--muted);font-size:.85rem;display:block;margin-top:.2rem}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0 .75rem}
+.err{color:var(--red);font-size:.92rem;margin:.25rem 0 .75rem}
+.drop{border:1.5px dashed var(--line);border-radius:12px;padding:.85rem;background:var(--sunk)}
+.drop label.add{color:var(--brand);font-weight:600;cursor:pointer}
+.pending{list-style:none;padding:0;margin:.5rem 0 0;font-size:.9rem}
+.pending li{display:flex;justify-content:space-between;gap:.5rem;padding:.2rem 0}
+.pending button{border:0;background:none;color:var(--red);cursor:pointer}
+.members{border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:0 0 .85rem}
+.members legend{font-weight:500;padding:0 .3rem}
+.mem{display:grid;grid-template-columns:1fr 7.5rem auto;gap:.4rem;margin-bottom:.4rem;align-items:center}
+.mem input{padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);width:100%}
+.mem button{border:0;background:none;color:var(--red);cursor:pointer;padding:.3rem}
+
+.types{display:grid;gap:.6rem}
+.type{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem;cursor:pointer}
+.type:hover{border-color:var(--brand)}
+.type strong{display:block;font-size:1.05rem}
+.type span{font-size:.9rem;color:var(--muted)}
+
+.sheet{position:fixed;inset:0;z-index:20;background:var(--overlay);display:none;justify-content:flex-end}
+.sheet.open{display:flex}
+.panel{background:var(--bg);width:100%;max-width:660px;height:100%;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 1rem) 1.1rem calc(env(safe-area-inset-bottom,0px) + 2rem);animation:slide .22s ease-out}
+@keyframes slide{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.panel{animation:none}}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem}
+.x{border:1px solid var(--line);background:var(--surface);border-radius:10px;width:40px;height:40px;cursor:pointer;font-size:1.3rem;flex:none}
+.statusbar{background:var(--cs);color:var(--c);border-radius:12px;padding:.75rem 1rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.25rem 1rem;font-weight:600}
+.statusbar span{font-weight:400}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem}
+.card+.card{margin-top:.6rem}
+.kv{display:grid;grid-template-columns:minmax(110px,40%) 1fr;gap:.35rem 1rem;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:500;overflow-wrap:anywhere}
+.mtable{width:100%;border-collapse:collapse;font-size:.95rem}
+.mtable th,.mtable td{text-align:left;padding:.35rem .4rem;border-bottom:1px solid var(--line)}
+.mtable th{color:var(--muted);font-weight:500}
+.scan{border-left:5px solid var(--c);}
+.scan .verdict{display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap;padding:.3rem 0;border-bottom:1px solid var(--line)}
+.scan .verdict:last-of-type{border-bottom:0}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.5rem}
+.file{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.4rem;cursor:pointer;text-align:left;font-size:.82rem;overflow-wrap:anywhere}
+.file .thumb{height:84px;border-radius:6px;background:var(--sunk);display:grid;place-items:center;overflow:hidden;margin-bottom:.3rem;color:var(--muted);font-weight:600;text-align:center;padding:.25rem}
+.file .thumb img{width:100%;height:100%;object-fit:cover}
+.file small{display:block;color:var(--muted)}
+.timeline{list-style:none;margin:0;padding:0 0 0 1.1rem;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:0 0 1rem .6rem}
+.timeline li::before{content:"";position:absolute;left:-1.55rem;top:.35rem;width:12px;height:12px;border-radius:50%;background:var(--c);border:2px solid var(--bg)}
+.timeline .when{font-size:.85rem;color:var(--muted)}
+.timeline .rem{margin-top:.15rem;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.4rem .6rem;font-size:.95rem}
+.actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.note{background:var(--amber-soft);color:var(--amber);border-radius:10px;padding:.6rem .8rem;margin-bottom:.75rem}
+.info{background:var(--brand-soft);color:var(--brand);border-radius:10px;padding:.6rem .8rem;margin-bottom:.75rem}
+.bigpin{font-size:2.6rem;font-weight:700;letter-spacing:.3em;margin:.25rem 0;color:var(--brand)}
+.mailbody{white-space:pre-wrap;font-family:inherit;margin:.75rem 0 0;padding-top:.75rem;border-top:1px solid var(--line)}
+.logrow{display:grid;grid-template-columns:9.5rem 1fr;gap:.25rem 1rem;padding:.5rem .2rem;border-bottom:1px solid var(--line);font-size:.93rem}
+.logrow button{all:unset;cursor:pointer}
+@media (max-width:540px){.logrow{grid-template-columns:1fr}}
+
+.preview{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.8);display:none;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + .75rem) .75rem calc(env(safe-area-inset-bottom,0px) + .75rem)}
+.preview.open{display:flex}
+.preview-head{display:flex;justify-content:space-between;align-items:center;color:#fff;gap:1rem;margin-bottom:.5rem}
+.preview-body{flex:1;display:grid;place-items:center;overflow:auto;background:#222;border-radius:10px}
+.preview-body img{max-height:100%;object-fit:contain}
+.preview-body iframe{width:100%;height:100%;border:0;background:#fff}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 1rem);transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:.6rem 1rem;border-radius:10px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%}
+.toast.show{opacity:1}
+.foot{text-align:center;margin-top:2rem;font-size:.85rem;color:var(--muted)}
+.foot button{background:none;border:0;color:var(--brand);text-decoration:underline;cursor:pointer}
+.busy{display:flex;gap:.6rem;align-items:center;color:var(--brand);font-weight:500}
+.spin{width:18px;height:18px;border:3px solid var(--brand-soft);border-top-color:var(--brand);border-radius:50%;animation:sp 1s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(20,33,61,.25);display:none;place-items:center}
+.overlay.open{display:grid}
+.overlay .box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.25rem;display:flex;gap:.7rem;align-items:center;max-width:90%}
+.ocrtext{white-space:pre-wrap;font-size:.85rem;background:var(--sunk);border-radius:8px;padding:.5rem .6rem;max-height:14rem;overflow:auto;margin-top:.4rem}
+
+</style>
+
+</head>
+<body>
+<div id="app"><p style="padding:2rem;text-align:center;color:#5A6477">Loading…</p></div>
+<div class="sheet" id="sheet" aria-hidden="true"><div class="panel" id="panel" role="dialog" aria-modal="true"></div></div>
+<div class="preview" id="preview"><div class="preview-head"><strong id="pvName"></strong><button class="x" data-a="closePreview" aria-label="Close preview">×</button></div><div class="preview-body" id="pvBody"></div></div>
+<div class="overlay" id="overlay"><div class="box"><span class="spin"></span><span id="overlayMsg">Working…</span></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+'use strict';
+/* ===== PASTE YOUR APPS SCRIPT /exec LINK BETWEEN THE QUOTES ===== */
+const API_URL='https://script.google.com/macros/library/d/1meNievHcMjM1rVYZ9VwU_xPFl1pmimapJPM_elUBKqRedynncWBlMN3q/2';
+/* ================================================================ */
+const XLSX_URL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+const MAX_FILE=5*1024*1024,MAX_TOTAL=15*1024*1024;
+const STATUS={SUB:{label:'Submitted',c:'brand'},REV:{label:'Under review',c:'violet'},RSR:{label:'Resubmission required',c:'amber'},RSB:{label:'Resubmitted',c:'teal'},CMP:{label:'Completed',c:'green'},REJ:{label:'Rejected',c:'red'}};
+const OPEN=['SUB','REV','RSR','RSB'];
+const CN={k:'consumerNo',label:'Consumer number',req:1,mode:'numeric'};
+const CNAME={k:'consumerName',label:'Consumer name',req:1};
+const TYPES={
+  UNB:{name:'Unblock consumer account',sheet:'Unblock',hint:'Request to unblock a blocked consumer',
+    fields:[CN,CNAME,{k:'reason',label:'Reason for unblocking',type:'select',req:1,options:['Rectified unsafe practice','HQO Instruction - Manual Dedup - Pass','Auto Booking','Surrendered multiple connection','Verified documents (proof of address/identity)','No longer misusing domestic cylinder','Not having PNG Connection','NCTC Unblocked','Other']},{k:'details',label:'Details',type:'textarea'}],
+    uploads:[{k:'doc',label:'Surrender document / TV voucher / eKYC screenshot etc.',req:1}]},
+  ADS:{name:'Aadhaar deseeding',sheet:'Aadhaar Deseeding',hint:'Remove Aadhaar seeding from a connection',gate:'ads',members:1,
+    fields:[CN,{k:'consumerName',label:'Name of person to be deseeded',req:1},{k:'aadhaar4',label:'Aadhaar of person to be deseeded (last 4 digits)',req:1,mode:'numeric',max:4,a4:1,help:'Last 4 digits only. Do not enter the full Aadhaar number.'},{k:'reason',label:'Reason',type:'select',req:1,options:['Consumer deceased','Wrong Aadhaar seeded','Duplicate seeding','Other']},{k:'rationNo',label:'Latest ration card number',req:1,help:'The card that no longer carries the name of the person to be deseeded.'},{k:'details',label:'Details',type:'textarea'}],
+    uploads:[{k:'ration',label:'Latest ration card copy',req:1,scan:'ration'},{k:'other',label:'Other documents (death certificate, declaration etc.)'}]},
+  SVM:{name:'Name change / SV modification',sheet:'Name change - SV',hint:'Name change, or cylinder and SD change',
+    fields:[CN,{k:'svNo',label:'SV number',req:1},{k:'modType',label:'Change required',type:'select',req:1,options:['Name change','Cylinder and SD change']},{k:'details',label:'Details of change',type:'textarea',req:1}],
+    uploads:[{k:'sv',label:'Original SV copy / Affidavit',req:1,scan:'sv'}]},
+  RCU:{name:'Ration card updation',sheet:'Ration Card Updation',hint:"Update a consumer's ration card number",
+    fields:[CN,CNAME,{k:'rationNo',label:'New ration card number',req:1}],uploads:[{k:'ration',label:'Ration card copy',req:1,scan:'ration'}]},
+  TRL:{name:'Transport load',sheet:'Transport Load',hint:'For DCT distributors only',gate:'dct',
+    fields:[{k:'loadDate',label:'Load date',type:'date',req:1},{k:'plant',label:'Bottling plant',req:1},{k:'vehicleNo',label:'Vehicle number',req:1,ph:'GJ06 AB 1234'},{k:'qty',label:'Number of cylinders',type:'number',req:1},{k:'details',label:'Remarks',type:'textarea'}],
+    uploads:[{k:'doc',label:'Challan / indent copy',req:1}]}
+};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=iso=>iso?new Date(iso).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+const fmtT=iso=>iso?new Date(iso).toLocaleString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}):'';
+const daysOld=iso=>Math.floor((Date.now()-new Date(iso))/864e5);
+const mask4=v=>v?'XXXX XXXX '+v:'';
+const uniq=a=>[...new Set(a.filter(Boolean))].sort();
+const st=s=>STATUS[s]||{label:s,c:'grey'};
+function toast(m,ms){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),ms||3800)}
+function opts(list,sel,all){return (all!=null?`<option value="">${esc(all)}</option>`:'')+list.map(v=>{const [val,lab]=Array.isArray(v)?v:[v,v];return `<option value="${esc(val)}" ${String(sel)===String(val)?'selected':''}>${esc(lab)}</option>`}).join('')}
+const readAsData=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error);r.readAsDataURL(f)});
+const mb=n=>(n/1048576).toFixed(n<1048576?2:1)+' MB';
+/* Shrink phone photos before upload: longest side up to 2000 px, JPEG, about 1 MB or less. Returns null to keep the original. */
+async function shrinkImage(file){
+  const heic=/heic|heif/i.test(file.type)||/\.(heic|heif)$/i.test(file.name);
+  if(!heic&&file.size<=900*1024)return null;
+  if(!/^image\/(jpeg|jpg|png|webp)$/i.test(file.type)&&!heic)return null;
+  const url=URL.createObjectURL(file);
+  try{
+    const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('decode'));i.src=url});
+    const w=img.naturalWidth,h=img.naturalHeight;if(!w||!h)return null;
+    let max=2000,q=0.82,blob=null;
+    for(let k=0;k<5;k++){
+      const sc=Math.min(1,max/Math.max(w,h));const c=document.createElement('canvas');c.width=Math.round(w*sc);c.height=Math.round(h*sc);
+      const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);
+      blob=await new Promise(r=>c.toBlob(r,'image/jpeg',q));
+      if(blob&&blob.size<=1048576)break;
+      max=Math.round(max*0.8);q=Math.max(0.6,q-0.07);
+    }
+    if(!blob||(!heic&&blob.size>=file.size))return null;
+    return {name:file.name.replace(/\.[^.]+$/,'')+'.jpg',type:'image/jpeg',size:blob.size,data:await readAsData(blob),from:file.size};
+  }catch(e){return null}finally{URL.revokeObjectURL(url)}
+}
+function b64ToBlob(b64,type){const bin=atob(b64);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type})}
+function dataToBlob(d){const i=d.indexOf(',');return b64ToBlob(d.slice(i+1),(d.slice(0,i).match(/data:([^;]+)/)||[])[1]||'application/octet-stream')}
+function download(name,blob){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),8000)}
+let xlsxP=null;
+function loadXlsx(){if(window.XLSX)return Promise.resolve();return xlsxP||(xlsxP=new Promise((res,rej)=>{const s=document.createElement('script');s.src=XLSX_URL;s.onload=res;s.onerror=()=>{xlsxP=null;rej(new Error('Could not load the Excel helper. Check the internet connection.'))};document.head.appendChild(s)}))}
+
+/* ---------- server calls ---------- */
+let token=null;try{token=sessionStorage.getItem('dc_token')}catch(e){}
+function setToken(t){token=t;try{t?sessionStorage.setItem('dc_token',t):sessionStorage.removeItem('dc_token')}catch(e){}}
+function overlay(msg){const o=$('#overlay');if(msg){$('#overlayMsg').textContent=msg;o.classList.add('open')}else o.classList.remove('open')}
+function call(fn,...args){
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(API_URL))return Promise.reject(new Error('Portal not configured: paste the /exec link into API_URL in index.html.'));
+  return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args}),redirect:'follow'})
+    .then(r=>{if(!r.ok)throw new Error('The server did not respond ('+r.status+'). Try again.');return r.json()},e=>{throw new Error('No connection to the server. Check the internet and try again.')})
+    .then(j=>{
+      if(j&&j.ok)return j.data;
+      let m=String((j&&j.error)||'Something went wrong.').replace(/^(Exception|Error):\s*/,'');
+      if(m.includes('SESSION_EXPIRED')){setToken(null);S=null;closeSheet(true);render();m='Your session ended. Please log in again.'}
+      throw new Error(m);
+    });
+}
+async function run(msg,fn){overlay(msg);try{return await fn()}catch(e){toast(e.message,6000);throw e}finally{overlay(null)}}
+async function refresh(){S=await call('getState',token);render()}
+
+let S=null,loginList=[];
+const ui={loginRole:'dist',lastCode:'',lastEmail:'',dFilter:'all',soTab:'req',bucket:'action',
+  rType:'',rRo:'',rSa:'',rDist:'',rCode:'',q:'',dRo:'',dSa:'',dDist:'',dAct:'',dq:'',
+  bkPeriod:'6',bkFrom:'',bkTo:'',lastBackup:null,restoreFile:null,logView:'act',
+  pending:{},members:[],sheet:null,importData:null,busy:false};
+const dist=code=>(S&&S.dists||[]).find(d=>d.code===code)||(S&&S.me&&S.me.code===code?S.me:{code,name:code,district:'',sa:'',ro:'',email:code+'@hpgas.hpcl.in'});
+const isSuper=()=>!!(S&&S.sup);
+const allFiles=r=>r.history.flatMap((h,hi)=>(h.files||[]).map((f,fi)=>Object.assign({},f,{hi,fi,stage:st(h.s).label,at:h.at})));
+
+/* ---------- page views ---------- */
+function bar(){
+  const who=S.role==='so'?`${esc(S.me.name)}<br><small>${S.sup?'Super admin':'Officer'}, ${esc(S.me.sa)}</small>`:`${esc(S.me.name)}<br><small>SAP ${S.me.code}</small>`;
+  return `<header class="bar"><div class="bar-in"><div class="brandmark"><span class="mark" aria-hidden="true"></span>Distributor Connect</div><div class="who">${who}</div><button data-a="logout">Log out</button></div></header>`;
+}
+function loginView(){
+  const isD=ui.loginRole==='dist';
+  return `<main class="login"><div class="login-card">
+    <div class="brandmark"><span class="mark" aria-hidden="true"></span>Distributor Connect</div>
+    <p class="muted" style="margin:.25rem 0 1.25rem">LPG distributor request portal</p>
+    <div class="seg" role="group" aria-label="Log in as">
+      <button type="button" data-a="loginRole" data-v="dist" aria-pressed="${isD}">Distributor</button>
+      <button type="button" data-a="loginRole" data-v="so" aria-pressed="${!isD}">Sales Officer / Admin</button>
+    </div>
+    <form id="loginForm" novalidate>
+      ${isD?`<label class="field"><span>Distributor</span><select name="code" id="loginCode"><option value="">Select your SAP code</option>${loginList.map(d=>`<option value="${esc(d.code)}" ${ui.lastCode===d.code?'selected':''}>${esc(d.code)} ${esc(d.name)}</option>`).join('')}</select>${loginList.length?'':'<small>No distributor is active yet. The sales officer activates distributors.</small>'}</label>
+      <label class="field"><span>PIN</span><input name="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password"></label>`
+      :`<label class="field"><span>Email</span><input name="email" id="loginEmail" type="email" value="${esc(ui.lastEmail)}" autocomplete="username"></label>
+      <label class="field"><span>Password</span><input name="pwd" type="password" autocomplete="current-password"></label>`}
+      <div class="err" id="loginErr" hidden></div>
+      <button class="btn primary" style="width:100%">Log in</button>
+    </form>
+    <p style="margin-top:.85rem;text-align:center"><button class="link" data-a="${isD?'forgotPin':'forgotPwd'}">${isD?'Forgot PIN? Email me a new one':'Forgot password? Email me a temporary one'}</button></p>
+  </div></main>`;
+}
+function row(r,showDist){
+  const s=st(r.status),t=TYPES[r.type],d=dist(r.code);
+  const subj=r.fields.consumerName||r.fields.consumerNo||r.fields.vehicleNo||r.fields.svNo||'';
+  const age=OPEN.includes(r.status)?daysOld(r.createdAt):null;
+  const flag=r.scan&&r.scan.match===false&&showDist?'<span class="chip c-red">Scan mismatch</span>':'';
+  return `<button class="row c-${s.c}" data-a="open" data-id="${r.id}">
+    <div class="row-top"><span class="rid">${r.id}</span><span>${flag} <span class="chip c-${s.c}">${s.label}</span></span></div>
+    <div class="row-title">${t.name}${subj?`: ${esc(subj)}`:''}</div>
+    <div class="row-meta">${showDist?`<span>${esc(d.name)} (${d.code}), ${esc(d.district)}</span>${isSuper()?`<span>${esc(d.sa)}</span>`:''}`:''}<span>Raised ${fmt(r.createdAt)}</span>${age!==null&&showDist?`<span class="${age>3?'late':''}">${age===0?'Today':age+(age===1?' day':' days')} open</span>`:''}</div>
+  </button>`;
+}
+function distView(){
+  const me=S.me;
+  const mine=S.requests.slice().sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
+  const g={all:mine,open:mine.filter(r=>OPEN.includes(r.status)),action:mine.filter(r=>r.status==='RSR'),closed:mine.filter(r=>!OPEN.includes(r.status))};
+  const list=g[ui.dFilter];const chips=[['all','All'],['open','Open'],['action','Needs your action'],['closed','Closed']];
+  return bar()+`<main class="wrap">
+    <section class="hello"><div><h1>${esc(me.name)}</h1><p class="muted">SAP ${me.code}, ${esc(me.district)}${me.dct?', DCT distributor':''}</p><p class="muted small">Updates are emailed to ${esc(me.email)}</p></div>
+    <button class="btn primary" data-a="new">Raise a request</button></section>
+    ${g.action.length?`<div class="note">${g.action.length===1?'One request needs':g.action.length+' requests need'} corrected documents from you.</div>`:''}
+    <div class="seg" role="group" aria-label="Filter requests">${chips.map(([k,l])=>`<button data-a="dFilter" data-v="${k}" aria-pressed="${ui.dFilter===k}">${l} (${g[k].length})</button>`).join('')}</div>
+    <div class="list">${list.length?list.map(r=>row(r,false)).join(''):`<div class="empty">${ui.dFilter==='all'?'You have not raised any requests yet.<br><button class="btn primary" data-a="new">Raise a request</button>':'No requests here.'}</div>`}</div></main>`;
+}
+const BUCKETS=[['action','Needs your action',r=>r.status==='SUB'||r.status==='RSB','brand'],['REV','Under review',r=>r.status==='REV','violet'],['RSR','With distributor',r=>r.status==='RSR','amber'],['CMP','Completed',r=>r.status==='CMP','green'],['REJ','Rejected',r=>r.status==='REJ','red'],['all','All requests',()=>true,'']];
+function transferBanner(){
+  const t=S.transfer;if(!t||t.to!==S.me.id)return '';
+  const from=(S.officers.find(x=>x.id===t.from)||{name:'The super admin'}).name;
+  return `<form id="acceptForm" class="card" style="border-left:5px solid var(--brand);margin-bottom:1rem" novalidate>
+    <strong>${esc(from)} wants to make you the super admin.</strong>
+    <p class="muted small" style="margin:.25rem 0 .6rem">Enter the 6-digit code sent to ${esc(S.me.email)}. It expires at ${new Date(t.exp).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'})}.</p>
+    <div class="actions"><input name="code" inputmode="numeric" maxlength="6" placeholder="6-digit code" style="padding:.55rem .7rem;border:1px solid var(--line);border-radius:10px;width:10rem"><button class="btn primary">Accept super admin role</button></div>
+    <div class="err" id="acceptErr" hidden></div></form>`;
+}
+function soView(){
+  const tabs=[['req','Requests'],['dist','Distributors'],['off','Officers'],['bak','Backup'],['log','Logs']];
+  const body={dist:soDists,off:soOfficers,bak:soBackup,log:soLogs}[ui.soTab]||soRequests;
+  const q=S.quota<20?`<div class="note">Only ${S.quota} emails left today on the portal account. Emails resume tomorrow.</div>`:'';
+  return bar()+`<main class="wrap">${transferBanner()}${q}<nav class="tabs" aria-label="Sections">${tabs.map(([k,l])=>`<button data-a="tab" data-v="${k}" ${ui.soTab===k?'aria-current="page"':''}>${l}</button>`).join('')}<button data-a="reload" style="margin-left:auto" aria-label="Refresh">Refresh</button></nav>${body()}</main>`;
+}
+function reqFilterBase(){
+  return S.requests.filter(r=>{const d=dist(r.code);return (!ui.rType||r.type===ui.rType)&&(!ui.rRo||d.ro===ui.rRo)&&(!ui.rSa||d.sa===ui.rSa)&&(!ui.rDist||d.district===ui.rDist)&&(!ui.rCode||r.code===ui.rCode)&&(!ui.q||(r.id+' '+Object.values(r.fields).join(' ')+' '+d.name+' '+d.code).toLowerCase().includes(ui.q.toLowerCase()))});
+}
+function soRequests(){
+  const base=reqFilterBase();const b=BUCKETS.find(x=>x[0]===ui.bucket)||BUCKETS[0];
+  const list=base.filter(b[2]).sort((a,c)=>ui.bucket==='action'?a.updatedAt.localeCompare(c.updatedAt):c.updatedAt.localeCompare(a.updatedAt));
+  const ds=S.dists;
+  return `<section class="hello"><div><h1>Distributor requests</h1><p class="muted">${S.requests.filter(r=>OPEN.includes(r.status)).length} open across ${ds.length} distributors</p></div><button class="btn" data-a="exportOpen">Export to Excel</button></section>
+    <div class="tiles">${BUCKETS.map(([k,l,f,c])=>`<button class="tile ${c?'c-'+c:''}" data-a="bucket" data-v="${k}" aria-pressed="${ui.bucket===k}"><b>${base.filter(f).length}</b><span>${l}</span></button>`).join('')}</div>
+    <div class="filters">
+      <select data-f="rType" aria-label="Request type">${opts(Object.entries(TYPES).map(([k,t])=>[k,t.name]),ui.rType,'All request types')}</select>
+      ${uniq(ds.map(d=>d.ro)).length>1?`<select data-f="rRo" aria-label="Regional office">${opts(uniq(ds.map(d=>d.ro)),ui.rRo,'All ROs')}</select>`:''}
+      ${isSuper()?`<select data-f="rSa" aria-label="Sales area">${opts(uniq(ds.map(d=>d.sa)),ui.rSa,'All sales areas')}</select>`:''}
+      <select data-f="rDist" aria-label="District">${opts(uniq(ds.map(d=>d.district)),ui.rDist,'All districts')}</select>
+      <select data-f="rCode" aria-label="Distributor">${opts(ds.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(d=>[d.code,d.name]),ui.rCode,'All distributors')}</select>
+      <input data-f="q" type="search" placeholder="Search ID, consumer, vehicle" value="${esc(ui.q)}" aria-label="Search">
+    </div>
+    <div class="list">${list.length?list.map(r=>row(r,true)).join(''):`<div class="empty">${ui.bucket==='action'?'Nothing waiting on you. New and resubmitted requests will appear here.':'No requests match these filters.'}</div>`}</div>`;
+}
+function tog(d,k,label){return `<label class="sw"><input type="checkbox" data-tog="${k}" data-code="${d.code}" ${d[k]?'checked':''}><span>${label}</span></label>`}
+function distFiltered(){
+  const q=ui.dq.toLowerCase();
+  return S.dists.filter(d=>(!ui.dRo||d.ro===ui.dRo)&&(!ui.dSa||d.sa===ui.dSa)&&(!ui.dDist||d.district===ui.dDist)&&(!ui.dAct||(ui.dAct==='on'?d.active:!d.active))&&(!q||(d.code+' '+d.name+' '+d.district+' '+d.email).toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name));
+}
+function soDists(){
+  const all=S.dists,list=distFiltered(),inactiveShown=list.filter(d=>!d.active).length;
+  return `<section class="hello"><div><h1>Distributors</h1><p class="muted">${all.filter(d=>d.active).length} of ${all.length} active. Only active distributors can log in.</p></div>
+    <div class="actions">${isSuper()?`<label class="btn primary" for="upDB" style="display:inline-block">Upload distributor list</label><input id="upDB" type="file" accept=".xlsx,.xlsm,.xls" hidden>`:''}${inactiveShown?`<button class="btn" data-a="activateShown">Activate ${inactiveShown} shown</button>`:''}</div></section>
+    <p class="muted small" style="margin:-.5rem 0 1rem">${isSuper()?'Upload Distributor_DB (.xlsm or .xlsx); the DB sheet is read. ':''}When a distributor is activated for the first time, a PIN is emailed to them automatically.</p>
+    <div class="filters">
+      <select data-f="dRo" aria-label="Regional office">${opts(uniq(all.map(d=>d.ro)),ui.dRo,'All ROs')}</select>
+      ${isSuper()?`<select data-f="dSa" aria-label="Sales area">${opts(uniq(all.map(d=>d.sa)),ui.dSa,'All sales areas')}</select>`:''}
+      <select data-f="dDist" aria-label="District">${opts(uniq(all.map(d=>d.district)),ui.dDist,'All districts')}</select>
+      <select data-f="dAct" aria-label="Status">${opts([['on','Active'],['off','Inactive']],ui.dAct,'Active and inactive')}</select>
+      <input data-f="dq" type="search" placeholder="Search code, name, district" value="${esc(ui.dq)}" aria-label="Search distributors">
+    </div>
+    <div class="list">${list.map(d=>`<div class="item"><div class="grow">
+        <div class="rid">${d.code} ${d.active?'':'<span class="chip c-grey">Inactive</span>'}</div>
+        <div class="row-title">${esc(d.name)}</div>
+        <div class="row-meta"><span>${esc(d.district)}</span><span>${esc(d.sa)}</span><span>${esc(d.ro)}</span>${d.market?`<span>${esc(d.market)}</span>`:''}<span>${esc(d.email)}</span>${d.pinAt?`<span>PIN sent ${fmt(d.pinAt)}</span>`:''}</div>
+        <div class="toggles">${tog(d,'active','Active')}${tog(d,'dct','DCT')}${tog(d,'ads','Aadhaar deseeding')}</div>
+      </div><div class="actions"><button class="btn sm" data-a="resetPin" data-v="${d.code}">Email new PIN</button></div></div>`).join('')||`<div class="empty">${all.length?'No distributors match these filters.':'No distributors yet. Upload the distributor list to begin.'}</div>`}</div>`;
+}
+function soOfficers(){
+  const me=S.me,t=S.transfer;const pending=t?S.officers.find(a=>a.id===t.to):null;
+  let html=`<section class="hello"><div><h1>Officers and admins</h1><p class="muted">Officers see and manage only their own sales area. The super admin sees all.</p></div></section>
+  <div class="card"><dl class="kv"><dt>Name</dt><dd>${esc(me.name)}</dd><dt>Email</dt><dd>${esc(me.email)}</dd><dt>Sales area</dt><dd>${esc(me.sa)}</dd><dt>Role</dt><dd>${S.sup?'Super admin':'Officer'}</dd></dl>
+    <p class="small" style="margin-top:.75rem">You get a copy of every request email for ${esc(me.sa)} distributors: new requests, every status change and every resubmission. Distributors' replies to these emails come to ${esc(me.email)}.</p>
+    ${S.sup?`<div class="toggles" style="margin-top:.5rem"><label class="sw"><input type="checkbox" data-cc="1" ${me.cc?'checked':''}><span>Also email me copies for other sales areas</span></label></div>`:''}
+    <div class="actions" style="margin-top:.75rem"><button class="btn" data-a="changePwd">Change my password</button></div></div>`;
+  if(!isSuper())return html+`<p class="muted" style="margin-top:1rem">Only the super admin can add or remove officers.</p>`;
+  html+=`<h3>All officers</h3><div class="list">${S.officers.map(a=>`<div class="item"><div class="grow"><div class="row-title">${esc(a.name)} ${a.id===me.id?'<span class="chip c-brand">You</span>':''} ${a.role==='super'?'<span class="chip c-violet">Super admin</span>':''} ${a.temp?'<span class="chip c-amber">Temporary password</span>':''}</div><div class="row-meta"><span>${esc(a.email)}</span><span>${esc(a.sa)}</span>${a.role==='super'&&a.cc?'<span>Gets copies for all sales areas</span>':''}</div></div>
+    ${a.id!==me.id?`<div class="actions"><button class="btn sm" data-a="resetAdmin" data-v="${a.id}">Reset password</button>${a.role!=='super'?`<button class="btn sm ghost" data-a="removeAdmin" data-v="${a.id}">Remove</button>`:''}</div>`:''}</div>`).join('')}</div>
+  <h3>Add an officer</h3>
+  <form id="adminForm" class="card" novalidate>
+    <div class="two"><label class="field"><span>Name *</span><input name="name"></label><label class="field"><span>Email *</span><input name="email" type="email" placeholder="name@hpcl.in"></label></div>
+    <label class="field"><span>Sales area *</span><input name="sa" list="saList" placeholder="e.g. BARODA LPG SA"><datalist id="saList">${uniq(S.dists.map(d=>d.sa).concat(S.officers.map(a=>a.sa))).map(s=>`<option value="${esc(s)}">`).join('')}</datalist><small>The officer sees only distributors with this sales area in the distributor list.</small></label>
+    <p class="muted small" style="margin-bottom:.75rem">A temporary password and the portal link are emailed to them. They set their own password at first login.</p>
+    <div class="err" id="adminErr" hidden></div><button class="btn primary">Add officer</button></form>
+  <h3>Transfer super admin role</h3>`;
+  if(pending)html+=`<div class="card"><p>Waiting for <strong>${esc(pending.name)}</strong> to enter the code sent to ${esc(pending.email)}. It expires at ${new Date(t.exp).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'})}. Nothing changes until then.</p><div class="actions" style="margin-top:.6rem"><button class="btn" data-a="cancelTransfer">Cancel transfer</button></div></div>`;
+  else{const others=S.officers.filter(a=>a.id!==me.id&&!a.temp);
+    html+=others.length?`<form id="transferForm" class="card" novalidate>
+      <p class="muted small" style="margin-bottom:.75rem">The new super admin must enter a one-time code sent to their email within 15 minutes. You become a normal officer for ${esc(me.sa)} once they accept.</p>
+      <label class="field"><span>New super admin *</span><select name="to">${opts(others.map(a=>[a.id,`${a.name} (${a.sa})`]),'','Select an officer')}</select></label>
+      <label class="field"><span>Your current password *</span><input name="pwd" type="password" autocomplete="current-password"></label>
+      <div class="err" id="transferErr" hidden></div><button class="btn warn">Send one-time code</button></form>`
+      :`<p class="muted">Add another officer, and let them log in once to set their password, before you can transfer the role.</p>`}
+  return html;
+}
+function bkRange(){
+  let to=new Date(),from=new Date();
+  if(ui.bkPeriod==='custom'){from=ui.bkFrom?new Date(ui.bkFrom+'T00:00:00'):new Date(0);to=ui.bkTo?new Date(ui.bkTo+'T23:59:59'):new Date()}
+  else from.setMonth(from.getMonth()-(+ui.bkPeriod));
+  return {from,to,key:`${ui.bkPeriod}|${ui.bkFrom}|${ui.bkTo}`,label:`${fmt(from.toISOString())} to ${fmt(to.toISOString())}`};
+}
+function bkSelection(){const {from,to}=bkRange();return S.requests.filter(r=>{const t=new Date(r.createdAt);return t>=from&&t<=to})}
+function soBackup(){
+  const rg=bkRange(),sel=bkSelection();
+  const inPortal=sel.reduce((n,r)=>n+allFiles(r).filter(f=>!f.archived).length,0);
+  const archivable=sel.filter(r=>!OPEN.includes(r.status)&&allFiles(r).some(f=>!f.archived));
+  const archFiles=archivable.reduce((n,r)=>n+allFiles(r).filter(f=>!f.archived).length,0);
+  const ready=ui.lastBackup&&ui.lastBackup.key===rg.key&&ui.lastBackup.downloaded;
+  const copies=S.archives.filter(a=>a.fileId);
+  return `<section class="hello"><div><h1>Backup and archive</h1><p class="muted">Nothing is deleted automatically. You decide when to back up and free up space.</p></div></section>
+  <div class="card">
+    <div class="two"><label class="field"><span>Requests raised in</span><select data-f="bkPeriod">${opts([['6','Last 6 months'],['12','Last 1 year'],['custom','Custom dates']],ui.bkPeriod)}</select></label>
+    ${ui.bkPeriod==='custom'?`<label class="field"><span>From</span><input type="date" data-f="bkFrom" value="${esc(ui.bkFrom)}"></label><label class="field"><span>To</span><input type="date" data-f="bkTo" value="${esc(ui.bkTo)}"></label>`:''}</div>
+    <p style="margin-bottom:.75rem"><strong>${sel.length}</strong> requests, <strong>${inPortal}</strong> attachments in the portal (${rg.label}${isSuper()?'':', '+esc(S.me.sa)}).</p>
+    <button class="btn primary" data-a="backup" ${sel.length?'':'disabled'}>Make and download backup (ZIP)</button>
+    <p class="muted small" style="margin-top:.5rem">The ZIP has an Excel index with details and history, every attachment in a folder per request, and a data file for restoring. A copy is also kept in the portal's Google Drive until you delete it below. Keep the download on an official drive.</p>
+  </div>
+  <h3>Free up space</h3>
+  <div class="card">${archivable.length?(ready?`<p style="margin-bottom:.75rem">Remove <strong>${archFiles}</strong> attachments of <strong>${archivable.length}</strong> closed requests from the portal. Requests, details and history stay visible, marked as archived.</p><button class="btn warn" data-a="archive">Remove attachments from portal</button>`
+      :`<p class="muted">${archivable.length} closed requests in this period still hold ${archFiles} attachments. Make and download the backup for this period first, then this option unlocks.</p>`)
+      :'<p class="muted">No closed requests with attachments in this period. Pending requests are never archived.</p>'}</div>
+  ${copies.length?`<h3>Backup copies in Google Drive</h3><div class="card">${copies.map(a=>`<div class="logrow"><span class="muted">${fmtT(a.at)}</span><span>${esc(a.name)}<br><span class="actions" style="margin-top:.3rem"><button class="btn sm" data-a="dlBackup" data-v="${esc(a.fileId)}">Download</button><button class="btn sm" data-a="restoreDrive" data-v="${esc(a.fileId)}">Restore from this</button><button class="btn sm ghost" data-a="delBackup" data-v="${esc(a.fileId)}">Delete Drive copy</button></span></span></div>`).join('')}<p class="muted small" style="margin-top:.5rem">Delete the Drive copy once you have saved the download on an official drive, so it stops using portal storage.</p></div>`:''}
+  <h3>Restore from a downloaded backup</h3>
+  <div class="card">
+    <div class="drop"><label class="add" for="restoreIn">Choose backup ZIP</label> <span class="muted" id="restoreName">${ui.restoreFile?esc(ui.restoreFile.name):'No file chosen'}</span><input id="restoreIn" type="file" accept=".zip" hidden></div>
+    <label class="field" style="margin-top:.75rem"><span>Request ID (optional)</span><input id="restoreId" placeholder="Leave empty to restore everything in the file"></label>
+    <button class="btn primary" data-a="restore" ${ui.restoreFile?'':'disabled'}>Restore documents</button>
+    <p class="muted small" style="margin-top:.5rem">Uploads work up to about 30 MB. For larger backups, use "Restore from this" on the Drive copy.</p>
+  </div>
+  ${S.archives.length?`<h3>Archive history</h3><div class="card">${S.archives.map(a=>`<div class="logrow"><span class="muted">${fmtT(a.at)}</span><span>${esc(a.what)}</span></div>`).join('')}</div>`:''}`;
+}
+function soLogs(){
+  return `<section class="hello"><div><h1>Logs</h1><p class="muted">Logins, approvals, uploads, backups and every email are recorded. ${S.quota} emails left today.</p></div></section>
+  <div class="seg" role="group" aria-label="Log type"><button data-a="logView" data-v="act" aria-pressed="${ui.logView==='act'}">Activity (${S.logs.length})</button><button data-a="logView" data-v="mail" aria-pressed="${ui.logView==='mail'}">Emails (${S.mails.length})</button></div>
+  <div class="card">${ui.logView==='act'
+    ?(S.logs.map(l=>`<div class="logrow"><span class="muted">${fmtT(l.at)}</span><span><strong>${esc(l.who)}</strong>: ${esc(l.what)}</span></div>`).join('')||'<p class="muted">No activity yet.</p>')
+    :(S.mails.map(m=>`<div class="logrow"><span class="muted">${fmtT(m.at)}</span><button data-a="viewMail" data-v="${m.id}"><strong>${esc(m.subject)}</strong><br><span class="muted small">To ${esc(m.to)}${m.att&&m.att.length?`, ${m.att.length} attachment${m.att.length>1?'s':''}`:''}${m.status&&m.status!=='Sent'?` <span class="chip c-red">${esc(m.status)}</span>`:''}</span></button></div>`).join('')||'<p class="muted">No emails yet.</p>')}</div>`;
+}
+function render(){$('#app').innerHTML=!S?loginView():S.role==='so'?soView():distView()}
+
+/* ---------- side sheets ---------- */
+function openSheet(html){$('#panel').innerHTML=html;$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';const f=$('#panel .x');f&&f.focus()}
+function closeSheet(force){if(ui.busy&&!force)return;$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';ui.sheet=null;ui.pending={};ui.members=[]}
+const head=(small,title,noClose)=>`<div class="panel-head"><div>${small?`<div class="rid muted">${small}</div>`:''}<h2>${title}</h2></div>${noClose?'':'<button class="x" data-a="close" aria-label="Close">×</button>'}</div>`;
+function typePicker(){
+  const me=S.me;ui.sheet={kind:'pick'};
+  openSheet(head('','Raise a request')+`<div class="types">${Object.entries(TYPES).filter(([k,t])=>!t.gate||me[t.gate]).map(([k,t])=>`<button class="type" data-a="pickType" data-v="${k}"><strong>${t.name}</strong><span>${t.hint}</span></button>`).join('')}</div>`);
+}
+function fieldHtml(f){
+  const a=`name="${f.k}" ${f.mode?`inputmode="${f.mode}"`:''} ${f.max?`maxlength="${f.max}"`:''} ${f.ph?`placeholder="${esc(f.ph)}"`:''}`;
+  let i;if(f.type==='select')i=`<select ${a}>${opts(f.options,'','Select')}</select>`;else if(f.type==='textarea')i=`<textarea ${a}></textarea>`;else i=`<input type="${f.type||'text'}" ${a}>`;
+  return `<label class="field"><span>${f.label}${f.req?' *':''}</span>${i}${f.help?`<small>${f.help}</small>`:''}</label>`;
+}
+function pendingList(slot){return (ui.pending[slot]||[]).map((f,i)=>`<li><span>${esc(f.name)} <span class="muted small">(${mb(f.size)}${f.from?', reduced from '+mb(f.from):''})</span></span><button type="button" data-a="unfile" data-slot="${slot}" data-v="${i}" aria-label="Remove ${esc(f.name)}">Remove</button></li>`).join('')}
+function uploader(slot,label,req,extra){
+  return `<div class="field"><span>${esc(label)}${req?' *':''}</span><div class="drop"><label class="add" for="file_${slot}">Add files</label> <span class="muted small">Photo or PDF. Photos are reduced automatically; keep PDFs under 5 MB.</span>
+    <input id="file_${slot}" data-slot="${slot}" type="file" multiple accept="image/*,application/pdf" hidden><ul class="pending" id="pend_${slot}">${pendingList(slot)}</ul>${extra||''}</div></div>`;
+}
+function membersHtml(){return ui.members.map((m,i)=>`<div class="mem"><input data-m="${i}" data-mk="name" value="${esc(m.name)}" placeholder="Name" aria-label="Member ${i+1} name"><input data-m="${i}" data-mk="a4" value="${esc(m.a4)}" placeholder="Aadhaar last 4" inputmode="numeric" maxlength="4" aria-label="Member ${i+1} Aadhaar last 4 digits"><button type="button" data-a="delMem" data-v="${i}" aria-label="Remove member ${i+1}">Remove</button></div>`).join('')||'<p class="muted small" style="margin:.2rem 0 .5rem">No members added yet.</p>'}
+function newForm(type){
+  const t=TYPES[type];ui.sheet={kind:'new',type};ui.pending={};ui.members=[];
+  openSheet(head('New request',t.name)+`<form id="newForm" class="card" novalidate>
+    ${t.fields.filter(f=>f.type!=='textarea').map(fieldHtml).join('')}
+    ${t.members?`<fieldset class="members"><legend>Family members on the latest ration card *</legend><div id="memRows">${membersHtml()}</div><button type="button" class="btn sm" data-a="addMem">Add member</button><small class="muted" style="display:block;margin-top:.4rem">Aadhaar: last 4 digits only.</small></fieldset>`:''}
+    ${t.fields.filter(f=>f.type==='textarea').map(fieldHtml).join('')}
+    ${t.uploads.map(u=>uploader(u.k,u.label,u.req,u.scan==='ration'?`<div style="margin-top:.6rem"><button type="button" class="btn sm" data-a="readCard" data-slot="${u.k}">Read ration card</button> <span class="muted small">Reads the card and helps fill the number${t.members?' and members':''}. Always check before submitting.</span></div>`:'')).join('')}
+    <div id="scanBox"></div><div class="err" id="formErr" hidden></div>
+    <div id="submitArea" class="actions"><button class="btn primary">Submit request</button><button type="button" class="btn ghost" data-a="new">Change type</button></div>
+  </form>`);
+}
+function scanCard(r){
+  const s=r.scan,t=TYPES[r.type];const ss=t.uploads.find(u=>u.scan);if(!ss)return '';
+  const canScan=allFiles(r).some(f=>f.slot===ss.k&&!f.archived);
+  const btn=canScan?`<button class="btn sm" data-a="scanNow" data-v="${r.id}">${s?'Scan again':'Scan document now'}</button>`:'';
+  if(!s)return `<h3>Scan result</h3><div class="card"><p class="muted" style="margin-bottom:.5rem">No scan yet.</p>${btn}</div>`;
+  const yes=(ok,a,b)=>`<span class="chip ${ok==null?'c-grey':ok?'c-green':'c-red'}">${ok==null?'Not checked':ok?a:b}</span>`;
+  let rows;
+  if(s.kind==='ration'){const personOk=s.personFound==null?null:(s.expect==='absent'?!s.personFound:s.personFound);
+    rows=`<div class="verdict"><span>Ration card number found: <strong>${esc(s.cardNumber||'not readable')}</strong></span>${yes(s.match,'Matches entry','Does not match: check')}</div>
+      <div class="verdict"><span>${s.expect==='absent'?'Person to be deseeded on card':'Consumer name on card'}: <strong>${s.personFound==null?'unclear':s.personFound?'Found':'Not found'}</strong></span>${yes(personOk,'As expected','Check')}</div>
+      ${s.members&&s.members.length?`<div style="padding-top:.4rem"><span class="muted">Members read from card:</span> ${s.members.map(esc).join(', ')}</div>`:''}`}
+  else rows=`<div class="verdict"><span>SV number(s) found: <strong>${esc((s.svNumbers||[]).join(', ')||'none readable')}</strong>${s.docType?` <span class="muted">(${esc(s.docType)})</span>`:''}</span>${yes(s.match,'Matches entry','Does not match: check')}</div>`;
+  const bad=s.match===false||(s.kind==='ration'&&s.personFound!=null&&(s.expect==='absent'?s.personFound:!s.personFound));
+  return `<h3>Scan result</h3><div class="card scan c-${bad?'red':s.match?'green':'grey'}">${rows}${s.notes?`<p class="muted small" style="margin-top:.4rem">${esc(s.notes)}</p>`:''}${s.text?`<details style="margin-top:.4rem"><summary class="small">Text read from the document (translated)</summary><div class="ocrtext">${esc(s.text)}</div></details>`:''}<p class="muted small" style="margin:.4rem 0 .5rem">Read by ${esc(s.engine||'')} for ${esc(s.by||'')} on ${fmtT(s.at)}. Automatic reading can make mistakes; check against the document.</p>${btn}</div>`;
+}
+function detail(id){
+  const r=S.requests.find(x=>x.id===id);if(!r)return;
+  ui.sheet={kind:'detail',id};ui.pending={};
+  const s=st(r.status),t=TYPES[r.type],d=dist(r.code),so=S.role==='so';const fl=allFiles(r);
+  const kv=(so?[['Distributor',`${d.name} (${d.code})`],['District',d.district],['Sales area',d.sa]]:[]).concat(t.fields.filter(f=>r.fields[f.k]).map(f=>[f.label,f.a4?mask4(r.fields[f.k]):f.type==='date'?fmt(r.fields[f.k]):r.fields[f.k]]));
+  let act='';
+  if(so){
+    if(OPEN.includes(r.status)){const waiting=r.status==='RSR';
+      act=`<h3>Update status</h3><div class="card">${waiting?`<div class="note">Waiting for the distributor to resubmit. You can still close the request.</div>`:''}
+        <label class="field"><span>Remarks for distributor</span><textarea id="soRemark" placeholder="What was done, or what is missing"></textarea><small>Required for every status except Under review. The distributor gets this by email.</small></label>
+        <div class="err" id="actErr" hidden></div>
+        <div class="actions">${r.status!=='REV'&&!waiting?`<button class="btn" data-a="act" data-v="REV">Mark under review</button>`:''}${!waiting?`<button class="btn warn" data-a="act" data-v="RSR">Ask to resubmit</button>`:''}<button class="btn ok" data-a="act" data-v="CMP">Mark completed</button><button class="btn bad" data-a="act" data-v="REJ">Reject</button></div></div>`}
+    else act=`<h3>Update status</h3><div class="card actions"><span class="muted" style="flex:1">This request is closed.</span><button class="btn" data-a="act" data-v="REV">Reopen for review</button></div>`;
+  }else if(r.status==='RSR'){const ask=[...r.history].reverse().find(h=>h.s==='RSR');
+    act=`<h3>Resubmit</h3><form id="resubForm" class="card" novalidate><div class="note">Officer's remark: ${esc(ask?ask.remark:'')}</div>
+      <label class="field"><span>Your reply *</span><textarea name="remark"></textarea></label>${uploader('resub','Corrected documents',false)}
+      <div class="err" id="formErr" hidden></div><button class="btn primary">Resubmit request</button></form>`}
+  openSheet(head(r.id,t.name)+`
+    <div class="statusbar c-${s.c}"><strong>${s.label}</strong><span>Updated ${fmtT(r.updatedAt)}</span></div>
+    <h3>Details</h3><div class="card"><dl class="kv">${kv.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div>
+    ${r.members&&r.members.length?`<h3>Family members (${r.members.length})</h3><div class="card"><table class="mtable"><thead><tr><th>Name</th><th>Aadhaar</th></tr></thead><tbody>${r.members.map(m=>`<tr><td>${esc(m.name)}</td><td>${esc(mask4(m.a4))}</td></tr>`).join('')}</tbody></table></div>`:''}
+    ${so?scanCard(r):''}
+    <h3>Attachments (${fl.length})</h3>
+    ${fl.length?`<div class="files">${fl.map(x=>`<button class="file" data-a="preview" data-fid="${x.fid}" data-archived="${esc(x.archived)}"><div class="thumb">${x.archived?'Archived':x.type==='application/pdf'?'PDF':'Photo'}</div>${esc(x.name)}<small>${x.stage}, ${fmt(x.at)}</small></button>`).join('')}</div>`:'<p class="muted">No attachments.</p>'}
+    ${act}
+    <h3>History</h3><ol class="timeline">${[...r.history].reverse().map(h=>{const hs=st(h.s);return `<li class="c-${hs.c}"><strong>${hs.label}</strong> <span class="when">by ${h.by==='so'?esc(h.byName||'Sales Officer'):'Distributor'}, ${fmtT(h.at)}</span>${h.remark?`<div class="rem">${esc(h.remark)}</div>`:''}</li>`}).join('')}</ol>`);
+}
+async function preview(fid,archived){
+  if(archived){toast(`Archived in backup ${archived}. Restore it from the Backup tab.`);return}
+  const f=await run('Opening file…',()=>call('getFile',token,fid)).catch(()=>null);if(!f)return;
+  $('#pvName').textContent=f.name;const body=$('#pvBody');
+  if(f.type.startsWith('image/'))body.innerHTML=`<img src="${f.data}" alt="${esc(f.name)}">`;
+  else{const url=URL.createObjectURL(dataToBlob(f.data));body.innerHTML=`<iframe src="${url}" title="${esc(f.name)}"></iframe><p style="position:absolute;bottom:1rem;left:0;right:0;text-align:center"><a href="${url}" download="${esc(f.name)}" class="btn">Download</a></p>`}
+  $('#preview').classList.add('open');
+}
+function mailSheet(m){
+  ui.sheet={kind:'mail'};
+  openSheet(head('Email',esc(m.subject))+`<div class="card"><dl class="kv"><dt>To</dt><dd>${esc(m.to)}</dd><dt>Status</dt><dd>${esc(m.status||'')}</dd>${m.att&&m.att.length?`<dt>Attachments</dt><dd>${m.att.map(esc).join(', ')}</dd>`:''}<dt>Sent</dt><dd>${fmtT(m.at)}</dd></dl><pre class="mailbody">${esc(m.kind==='pwd'||/PIN|password|code/i.test(m.subject)?m.body.replace(/(PIN for .* is )\d{4}/,'$1••••').replace(/(password(?: is)?:? )\S+/i,'$1••••••').replace(/(code: )\d{6}/,'$1••••••'):m.body)}</pre></div>
+  <div class="actions" style="margin-top:1rem"><button class="btn primary" data-a="close">Done</button></div>`);
+}
+function pwdSheet(forced){
+  ui.sheet={kind:'pwd',forced};
+  openSheet(head('',forced?'Set your own password':'Change my password',forced)+`<form id="pwdForm" class="card" novalidate>
+    ${forced?'<div class="note">You logged in with a temporary password. Set your own password to continue.</div>':'<label class="field"><span>Current password</span><input name="cur" type="password" autocomplete="current-password"></label>'}
+    <label class="field"><span>New password</span><input name="p1" type="password" autocomplete="new-password"><small>At least 8 characters, with letters and numbers.</small></label>
+    <label class="field"><span>Confirm new password</span><input name="p2" type="password" autocomplete="new-password"></label>
+    <div class="err" id="formErr" hidden></div><button class="btn primary">Save password</button></form>`);
+}
+function exportSheet(){
+  ui.sheet={kind:'export'};const ds=S.dists;
+  openSheet(head('','Export to Excel')+`<form id="exportForm" class="card" novalidate>
+    <label class="field"><span>Request type</span><select name="type">${opts(Object.entries(TYPES).map(([k,t])=>[k,t.name]),'','All types')}</select></label>
+    <label class="field"><span>Status</span><select name="status">${opts([['pending','All pending (submitted, under review, with distributor, resubmitted)'],['all','All statuses'],...Object.entries(STATUS).map(([k,s])=>[k,s.label])],'pending')}</select></label>
+    <div class="two">${isSuper()?`<label class="field"><span>Sales area</span><select name="sa">${opts(uniq(ds.map(d=>d.sa)),'','All sales areas')}</select></label>`:''}<label class="field"><span>District</span><select name="district">${opts(uniq(ds.map(d=>d.district)),'','All districts')}</select></label></div>
+    <label class="field"><span>Distributor</span><select name="code">${opts(ds.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(d=>[d.code,`${d.code} ${d.name}`]),'','All distributors')}</select></label>
+    <div class="two"><label class="field"><span>Raised from</span><input type="date" name="from"></label><label class="field"><span>Raised to</span><input type="date" name="to"></label></div>
+    <p class="muted small" style="margin-bottom:.75rem">Summary sheet plus one sheet per request type with every field, family members, scan results, status, dates, days pending and latest remarks.</p>
+    <div class="err" id="formErr" hidden></div><button class="btn primary">Download Excel</button></form>`);
+}
+function importSheet(list,fileName){
+  ui.importData=list;ui.sheet={kind:'import'};
+  const ex=new Set(S.dists.map(d=>d.code));const add=list.filter(d=>!ex.has(d.code)).length;
+  const byDist={};list.forEach(d=>byDist[d.district]=(byDist[d.district]||0)+1);
+  openSheet(head(esc(fileName),'Upload distributor list')+`<div class="card">
+    <p><strong>${list.length}</strong> distributors found: <strong>${add}</strong> new, <strong>${list.length-add}</strong> already in the portal (details updated, settings kept).</p>
+    <p class="muted small" style="margin-top:.4rem">Sales area: ${uniq(list.map(d=>d.sa)).map(esc).join(', ')||'blank'}. RO: ${uniq(list.map(d=>d.ro)).map(esc).join(', ')||'blank'}.</p>
+    <p class="muted small" style="margin-top:.2rem">By district: ${Object.entries(byDist).sort().map(([k,v])=>`${esc(k||'blank')} ${v}`).join(', ')}</p>
+    <p class="muted small" style="margin-top:.2rem">New distributors start inactive. Their PIN is emailed when you activate them. Emails are set as code@hpgas.hpcl.in.</p>
+  </div><div class="actions" style="margin-top:1rem"><button class="btn primary" data-a="doImport">Upload ${list.length} distributors</button><button class="btn ghost" data-a="close">Cancel</button></div>`);
+}
+
+/* ---------- Excel export ---------- */
+function lastBy(r,by){const h=[...r.history].reverse().find(x=>x.by===by&&x.remark&&x.remark!=='Request raised.');return h?h.remark:''}
+function scanText(r){const s=r.scan;if(!s)return '';
+  if(s.kind==='ration')return `Card no. read: ${s.cardNumber||'not readable'} (${s.match==null?'not checked':s.match?'matches':'DOES NOT MATCH'}); ${s.expect==='absent'?'deseeded person on card':'consumer on card'}: ${s.personFound==null?'unclear':s.personFound?'found':'not found'}${s.members&&s.members.length?'; members read: '+s.members.join(', '):''}`;
+  return `SV no. read: ${(s.svNumbers||[]).join(', ')||'none'} (${s.match==null?'not checked':s.match?'matches':'DOES NOT MATCH'})${s.docType?'; '+s.docType:''}`}
+function buildWorkbook(rows){
+  const X=window.XLSX,wb=X.utils.book_new();
+  const common=r=>{const d=dist(r.code);return {'Request ID':r.id,'Distributor Code':r.code,'Distributor Name':d.name,'Sales Area':d.sa,'District':d.district,'Regional Office':d.ro,'Request Type':TYPES[r.type].name}};
+  const tail=r=>({'Status':st(r.status).label,'Raised On':fmt(r.createdAt),'Last Updated':fmt(r.updatedAt),'Days Pending':OPEN.includes(r.status)?daysOld(r.createdAt):'','Latest Officer Remark':lastBy(r,'so'),'Latest Distributor Reply':lastBy(r,'dist'),'Scan Result':scanText(r),'Attachments':allFiles(r).map(f=>f.name+(f.archived?' (archived)':'')).join('; ')});
+  const sheet=(name,data)=>{const ws=X.utils.json_to_sheet(data);const keys=Object.keys(data[0]||{});ws['!cols']=keys.map(k=>({wch:Math.min(45,Math.max(k.length,...data.map(o=>String(o[k]??'').length))+2)}));X.utils.book_append_sheet(wb,ws,name.slice(0,31))};
+  sheet('Summary',rows.map(r=>Object.assign(common(r),{'Consumer No':r.fields.consumerNo||'','Consumer / Person Name':r.fields.consumerName||''},tail(r))));
+  for(const [k,t] of Object.entries(TYPES)){const rs=rows.filter(r=>r.type===k);if(!rs.length)continue;
+    sheet(t.sheet,rs.map(r=>{const o=common(r);t.fields.forEach(f=>{const v=r.fields[f.k]||'';o[f.label]=f.a4?mask4(v):f.type==='date'&&v?fmt(v):v});if(t.members)o['Family Members']=(r.members||[]).map(m=>`${m.name} (${mask4(m.a4)})`).join('; ');return Object.assign(o,tail(r))}))}
+  return wb;
+}
+const stamp=()=>{const d=new Date();return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`};
+async function readDistributorFile(file){
+  await loadXlsx();
+  const wb=XLSX.read(new Uint8Array(await file.arrayBuffer()),{type:'array'});
+  const name=wb.SheetNames.find(n=>n.trim().toUpperCase()==='DB')||wb.SheetNames.find(n=>{const r=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:''})[0]||[];return String(r[0]).trim().toLowerCase()==='distributor code'});
+  if(!name)throw new Error('No DB sheet found. The file needs a sheet named DB with "Distributor Code" in cell A1.');
+  const rows=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:''});
+  const h=rows.findIndex(r=>String(r[0]).trim().toLowerCase()==='distributor code');
+  if(h<0)throw new Error('"Distributor Code" was not found in column A of the DB sheet.');
+  const list=[],seen=new Set();
+  for(let i=h+1;i<rows.length;i++){const r=rows[i];const code=String(r[0]).trim().replace(/\.0$/,'');if(!/^\d{6,10}$/.test(code)||seen.has(code))continue;seen.add(code);
+    list.push({code,name:String(r[1]).trim(),sa:String(r[2]).trim(),district:String(r[4]).trim(),ro:String(r[5]).trim(),market:String(r[7]).trim()})}
+  if(!list.length)throw new Error('No distributor codes were found below the heading row.');
+  return list;
+}
+
+/* ---------- actions ---------- */
+function showErr(id,msg){const e=$('#'+id);if(e){e.textContent=msg;e.hidden=!msg}}
+function formValues(){const f=$('#newForm');return f?Object.fromEntries(new FormData(f)):{}}
+function uploadsPayload(slots){const out=[];slots.forEach(sl=>(ui.pending[sl]||[]).forEach(f=>out.push({name:f.name,type:f.type,slot:sl,data:f.data})));return out}
+async function readCard(slot){
+  const t=TYPES[ui.sheet.type],v=formValues();
+  if(!(ui.pending[slot]||[]).length){showErr('formErr','Add the ration card copy first, then tap Read ration card.');return}
+  showErr('formErr','');const box=$('#scanBox');
+  box.innerHTML='<div class="busy"><span class="spin"></span>Reading the ration card. This can take up to a minute.</div>';
+  try{
+    const res=await call('previewScan',token,'ration',uploadsPayload([slot]),{person:v.consumerName,expect:t.members?'absent':'present',entered:v.rationNo});
+    const rn=$('#newForm [name="rationNo"]');if(rn&&!rn.value&&res.cardNumber&&!/\//.test(res.cardNumber))rn.value=res.cardNumber;
+    if(t.members&&res.members&&res.members.length){const filled=ui.members.some(m=>m.name.trim());
+      if(!filled||confirm(`Replace the member rows with the ${res.members.length} names read from the card?`)){ui.members=res.members.map(n=>({name:n,a4:''}));$('#memRows').innerHTML=membersHtml()}}
+    box.innerHTML=`<div class="info">Card number read: <strong>${esc(res.cardNumber||'not readable')}</strong>${res.match===false?'. This does not match the number you entered: please check.':''}${res.members&&res.members.length?`. ${res.members.length} members filled in below the form fields.`:''}${res.text?`<details style="margin-top:.4rem"><summary class="small">Text read from the card (translated). Copy member names from here.</summary><div class="ocrtext">${esc(res.text)}</div></details>`:''}</div>`;
+  }catch(e){box.innerHTML=`<div class="note">${esc(e.message)} You can still fill the details yourself.</div>`}
+}
+async function submitNew(form){
+  if(ui.busy||!ui.sheet||ui.sheet.kind!=='new')return;
+  const type=ui.sheet.type,t=TYPES[type];const d=Object.fromEntries(new FormData(form));
+  const missing=t.fields.filter(x=>x.req&&!String(d[x.k]||'').trim()).map(x=>x.label);
+  if(missing.length)return showErr('formErr','Fill in: '+missing.join(', ')+'.');
+  if(d.reason==='Other'&&!String(d.details||'').trim())return showErr('formErr','Describe the reason in Details when you choose Other.');
+  for(const f of t.fields)if(f.a4&&!/^\d{4}$/.test(d[f.k]||''))return showErr('formErr',`${f.label}: enter exactly 4 digits.`);
+  let members=[];
+  if(t.members){members=ui.members.map(m=>({name:m.name.trim(),a4:m.a4.trim()})).filter(m=>m.name||m.a4);
+    if(!members.length)return showErr('formErr','Add the family members on the latest ration card.');
+    const bad=members.findIndex(m=>!m.name||!/^\d{4}$/.test(m.a4));if(bad>=0)return showErr('formErr',`Family member ${bad+1}: enter the name and exactly 4 Aadhaar digits.`)}
+  const lack=t.uploads.find(u=>u.req&&!(ui.pending[u.k]||[]).length);if(lack)return showErr('formErr',`Attach the ${lack.label.toLowerCase()}.`);
+  const files=uploadsPayload(t.uploads.map(u=>u.k));
+  if(files.reduce((n,f)=>n+f.data.length*0.75,0)>MAX_TOTAL)return showErr('formErr','Attachments together are over 15 MB. Compress them and try again.');
+  showErr('formErr','');ui.busy=true;
+  const fields={};t.fields.forEach(x=>{if(d[x.k])fields[x.k]=String(d[x.k]).trim()});
+  try{
+    const res=await run(t.uploads.some(u=>u.scan)?'Uploading and scanning the document…':'Uploading…',()=>call('submitRequest',token,{type,fields,members,files}));
+    ui.busy=false;closeSheet();ui.dFilter='all';await refresh();toast(`Request ${res.id} submitted. Confirmation emailed to ${res.email}.`);
+  }catch(e){ui.busy=false;showErr('formErr',e.message)}
+}
+
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-a]');
+  if(!el){if(e.target.id==='sheet'&&!(ui.sheet&&ui.sheet.forced))closeSheet();if(e.target.id==='preview')$('#preview').classList.remove('open');return}
+  const a=el.dataset.a,v=el.dataset.v;
+  try{switch(a){
+  case 'loginRole':ui.loginRole=v;render();break;
+  case 'logout':call('logout',token).catch(()=>{});setToken(null);S=null;ui.soTab='req';closeSheet(true);loginList=await call('getLoginList').catch(()=>loginList);render();break;
+  case 'reload':await run('Refreshing…',refresh);break;
+  case 'dFilter':ui.dFilter=v;render();break;
+  case 'bucket':ui.bucket=v;render();break;
+  case 'tab':ui.soTab=v;render();window.scrollTo(0,0);break;
+  case 'logView':ui.logView=v;render();break;
+  case 'new':typePicker();break;
+  case 'pickType':newForm(v);break;
+  case 'close':if(!(ui.sheet&&ui.sheet.forced))closeSheet();break;
+  case 'open':detail(el.dataset.id);break;
+  case 'unfile':{const sl=el.dataset.slot;ui.pending[sl].splice(+v,1);$('#pend_'+sl).innerHTML=pendingList(sl);break}
+  case 'addMem':ui.members.push({name:'',a4:''});$('#memRows').innerHTML=membersHtml();$$('#memRows input[data-mk="name"]').pop().focus();break;
+  case 'delMem':ui.members.splice(+v,1);$('#memRows').innerHTML=membersHtml();break;
+  case 'readCard':readCard(el.dataset.slot);break;
+  case 'preview':preview(el.dataset.fid,el.dataset.archived);break;
+  case 'closePreview':$('#preview').classList.remove('open');$('#pvBody').innerHTML='';break;
+  case 'viewMail':{const m=S.mails.find(x=>x.id===v);if(m)mailSheet(m);break}
+  case 'forgotPin':{const code=$('#loginCode').value;if(!code)return showErr('loginErr','Select your SAP code first, then tap Forgot PIN.');
+    const msg=await run('Sending…',()=>call('forgotPin',code));showErr('loginErr','');toast(msg,6000);break}
+  case 'forgotPwd':{const em=($('#loginEmail').value||'').trim();if(!em)return showErr('loginErr','Enter your email first, then tap Forgot password.');
+    const msg=await run('Sending…',()=>call('forgotPwd',em));showErr('loginErr','');toast(msg,6000);break}
+  case 'resetPin':{const d=dist(v);if(!confirm(`Email a new PIN to ${d.name} at ${d.email}? The current PIN will stop working.`))return;
+    await run('Sending new PIN…',()=>call('resetPin',token,v));await refresh();toast(`New PIN emailed to ${d.email}`);break}
+  case 'activateShown':{const list=distFiltered().filter(d=>!d.active);
+    if(!list.length||!confirm(`Activate ${list.length} distributors? Each one gets their PIN by email.`))return;
+    const r=await run(`Activating and emailing PINs…`,()=>call('activateMany',token,list.map(d=>d.code)));await refresh();toast(`${r.n} activated, ${r.mails} PIN emails sent`);break}
+  case 'resetAdmin':{const o=S.officers.find(x=>x.id===v);if(!o||!confirm(`Reset the password for ${o.name}? A temporary password is emailed to them.`))return;
+    await run('Resetting…',()=>call('resetOfficer',token,v));await refresh();toast(`Temporary password emailed to ${o.email}`);break}
+  case 'removeAdmin':{const o=S.officers.find(x=>x.id===v);if(!o||!confirm(`Remove ${o.name}? They will no longer be able to log in.`))return;
+    await run('Removing…',()=>call('removeOfficer',token,v));await refresh();toast(`${o.name} removed`);break}
+  case 'changePwd':pwdSheet(false);break;
+  case 'cancelTransfer':if(confirm('Cancel the super admin transfer?')){await run('Cancelling…',()=>call('cancelTransfer',token));await refresh()}break;
+  case 'exportOpen':exportSheet();break;
+  case 'doImport':{const r=await run('Uploading distributor list…',()=>call('importDistributors',token,ui.importData));closeSheet();ui.soTab='dist';await refresh();toast(`${r.added} added, ${r.updated} updated. Activate distributors to let them log in.`,6000);break}
+  case 'scanNow':{await run('Scanning the document…',()=>call('scanRequest',token,v));await refresh();detail(v);break}
+  case 'act':{const id=ui.sheet.id;const remark=($('#soRemark')?$('#soRemark').value:'').trim();
+    if(v!=='REV'&&!remark){showErr('actErr','Add a remark so the distributor knows what happened.');$('#soRemark').focus();return}
+    const r=await run('Updating and emailing the distributor…',()=>call('setStatus',token,id,v,remark));await refresh();detail(id);toast(`${id} marked ${st(v).label.toLowerCase()}. Email sent to ${r.email}.`);break}
+  case 'backup':{const rg=bkRange();
+    const b=await run('Making the backup. Large periods can take a few minutes…',()=>call('makeBackup',token,rg.from.toISOString(),rg.to.toISOString()));
+    ui.lastBackup={key:rg.key,fileId:b.fileId,name:b.name,downloaded:false};await refresh();
+    const dl=await run('Downloading…',()=>call('downloadBackup',token,b.fileId)).catch(()=>null);
+    if(dl){download(dl.name,b64ToBlob(dl.data,'application/zip'));ui.lastBackup.downloaded=true;render();toast(`Backup ${b.name} downloaded: ${b.requests} requests, ${b.files} attachments.`,6000)}
+    break}
+  case 'dlBackup':{const dl=await run('Downloading…',()=>call('downloadBackup',token,v));download(dl.name,b64ToBlob(dl.data,'application/zip'));break}
+  case 'archive':{const rg=bkRange();if(!ui.lastBackup||ui.lastBackup.key!==rg.key)return toast('Make and download the backup for this period first.');
+    if(!confirm(`Remove the attachments of closed requests in this period from the portal?\n\nThey are in backup ${ui.lastBackup.name}. Requests and history stay visible. You can restore the files later.`))return;
+    const r=await run('Archiving…',()=>call('archivePeriod',token,ui.lastBackup.fileId,rg.from.toISOString(),rg.to.toISOString()));await refresh();toast(`${r.n} attachments archived.`);break}
+  case 'delBackup':if(confirm('Delete this backup from the portal Google Drive? Do this only after saving the download on an official drive.')){await run('Deleting…',()=>call('deleteBackupCopy',token,v));await refresh();toast('Drive copy deleted')}break;
+  case 'restoreDrive':{const id=prompt('Restore documents from this backup.\n\nEnter a request ID to restore only that request, or leave empty for all:','');if(id===null)return;
+    const r=await run('Restoring…',()=>call('restoreFromDrive',token,v,id.trim()));await refresh();toast(`${r.restored} attachments restored.`);break}
+  case 'restore':{const f=ui.restoreFile;if(!f)return;if(f.size>30*1024*1024)return toast('This file is over 30 MB. Use "Restore from this" on the Drive copy instead.',6000);
+    const b64=(await readAsData(f)).split(',')[1];const id=($('#restoreId')||{}).value||'';
+    const r=await run('Restoring…',()=>call('restoreBackup',token,b64,id.trim()));ui.restoreFile=null;await refresh();toast(`${r.restored} attachments restored.`);break}
+  }}catch(err){/* message already shown */}
+});
+
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.m!=null){const m=ui.members[+t.dataset.m];if(m){m[t.dataset.mk]=t.dataset.mk==='a4'?t.value.replace(/\D/g,'').slice(0,4):t.value;if(t.dataset.mk==='a4'&&t.value!==m.a4)t.value=m.a4}return}
+  const f=t.dataset.f;
+  if(f&&t.tagName==='INPUT'&&t.type!=='date'){ui[f]=t.value;const pos=t.selectionStart;render();const s=document.querySelector(`[data-f="${f}"]`);if(s){s.focus();try{s.setSelectionRange(pos,pos)}catch(x){}}}
+});
+document.addEventListener('change',async e=>{
+  const t=e.target,f=t.dataset.f;
+  if(f&&(t.tagName==='SELECT'||t.type==='date')){ui[f]=t.value;render();return}
+  try{
+  if(t.dataset.tog){const d=dist(t.dataset.code),k=t.dataset.tog,val=t.checked,lab={active:'Active',dct:'DCT',ads:'Aadhaar deseeding'}[k];
+    const r=await run('Saving…',()=>call('toggleDist',token,d.code,k,val)).catch(()=>{t.checked=!val;return null});
+    if(r){d[k]=val;await refresh();toast(`${lab} ${val?'on':'off'} for ${d.name}${r.pinSent?'. PIN emailed.':''}`)}return}
+  if(t.dataset.cc){await run('Saving…',()=>call('setCc',token,t.checked));S.me.cc=t.checked;toast(t.checked?'You will also get copies for other sales areas':'Copies for other sales areas turned off');return}
+  if(t.id&&t.id.startsWith('file_')){
+    const slot=t.dataset.slot,list=[...t.files];t.value='';ui.pending[slot]=ui.pending[slot]||[];
+    let saved=0;
+    for(const file of list){
+      const isImg=file.type.startsWith('image/')||/\.(heic|heif|jpe?g|png)$/i.test(file.name),isPdf=file.type==='application/pdf'||/\.pdf$/i.test(file.name);
+      if(!isImg&&!isPdf){toast(`${file.name}: only PDF or photos are accepted.`);continue}
+      if(file.size>(isImg?25:5)*1048576){toast(`${file.name} is too large (${mb(file.size)}). ${isPdf?'Keep PDFs under 5 MB.':'Take the photo again at normal size.'}`,6000);continue}
+      let item=null;
+      if(isImg){overlay('Optimising photo…');try{item=await shrinkImage(file)}finally{overlay(null)}}
+      if(!item){
+        if(file.size>MAX_FILE){toast(`${file.name} is over 5 MB and could not be reduced. ${isPdf?'Compress the PDF and try again.':'Take the photo again, or save it as JPG.'}`,6000);continue}
+        item={name:file.name,type:file.type||(isPdf?'application/pdf':/\.png$/i.test(file.name)?'image/png':/\.(heic|heif)$/i.test(file.name)?'image/heic':'image/jpeg'),size:file.size,data:await readAsData(file)};
+      }else saved+=item.from-item.size;
+      ui.pending[slot].push(item)}
+    if(saved>200*1024)toast(`Photos reduced by ${mb(saved)} for faster upload and clearer scanning.`);
+    const p=$('#pend_'+slot);if(p)p.innerHTML=pendingList(slot);return}
+  if(t.id==='upDB'){const file=t.files[0];t.value='';if(!file)return;
+    try{overlay('Reading the file…');importSheet(await readDistributorFile(file),file.name)}catch(err){toast(err.message||'The file could not be read.',6000)}finally{overlay(null)}return}
+  if(t.id==='restoreIn'){ui.restoreFile=t.files[0]||null;render();return}
+  }catch(err){}
+});
+
+document.addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.target;
+  try{
+  if(f.id==='loginForm'){
+    const d=Object.fromEntries(new FormData(f));
+    let res;
+    if(ui.loginRole==='dist'){if(!d.code)return showErr('loginErr','Select your SAP code.');ui.lastCode=d.code;
+      res=await run('Logging in…',()=>call('loginDist',d.code,d.pin)).catch(err=>{showErr('loginErr',err.message);return null})}
+    else{ui.lastEmail=(d.email||'').trim();res=await run('Logging in…',()=>call('loginOfficer',ui.lastEmail,d.pwd)).catch(err=>{showErr('loginErr',err.message);return null})}
+    if(!res)return;
+    setToken(res.token);await run('Loading…',refresh);window.scrollTo(0,0);if(res.temp)pwdSheet(true);
+  }
+  else if(f.id==='newForm')submitNew(f);
+  else if(f.id==='resubForm'){
+    const remark=(new FormData(f).get('remark')||'').trim();if(!remark)return showErr('formErr','Write a reply explaining what you corrected.');
+    const id=ui.sheet.id;const r=await run('Uploading…',()=>call('resubmit',token,id,remark,uploadsPayload(['resub']))).catch(err=>{showErr('formErr',err.message);return null});
+    if(!r)return;await refresh();detail(id);toast(`${id} resubmitted. Confirmation emailed to ${r.email}.`);
+  }
+  else if(f.id==='adminForm'){
+    const d=Object.fromEntries(new FormData(f));
+    const r=await run('Adding officer…',()=>call('addOfficer',token,d.name,d.email,d.sa)).catch(err=>{showErr('adminErr',err.message);return null});
+    if(!r)return;await refresh();toast(`Officer added. Login details emailed to ${r.email}.`,6000);
+  }
+  else if(f.id==='pwdForm'){
+    const d=Object.fromEntries(new FormData(f));
+    if(d.p1!==d.p2)return showErr('formErr','The two new passwords do not match.');
+    const ok=await run('Saving…',()=>call('changePassword',token,d.cur||'',d.p1)).catch(err=>{showErr('formErr',err.message);return null});
+    if(!ok)return;ui.sheet.forced=false;closeSheet(true);await refresh();toast('Password changed');
+  }
+  else if(f.id==='transferForm'){
+    const d=Object.fromEntries(new FormData(f));if(!d.to)return showErr('transferErr','Select the new super admin.');
+    const r=await run('Sending code…',()=>call('startTransfer',token,d.to,d.pwd)).catch(err=>{showErr('transferErr',err.message);return null});
+    if(!r)return;await refresh();toast(`One-time code emailed to ${r.email}. It is valid for 15 minutes.`,6000);
+  }
+  else if(f.id==='acceptForm'){
+    const code=(new FormData(f).get('code')||'').trim();
+    const ok=await run('Checking…',()=>call('acceptTransfer',token,code)).catch(err=>{showErr('acceptErr',err.message);return null});
+    if(!ok)return;await refresh();toast('You are now the super admin. Confirmation emails sent to both of you.',6000);
+  }
+  else if(f.id==='exportForm'){
+    const d=Object.fromEntries(new FormData(f));
+    const from=d.from?new Date(d.from+'T00:00:00'):null,to=d.to?new Date(d.to+'T23:59:59'):null;
+    const rows=S.requests.filter(r=>{const x=dist(r.code),c=new Date(r.createdAt);
+      return (!d.type||r.type===d.type)&&(d.status==='all'||(d.status==='pending'?OPEN.includes(r.status):r.status===d.status))&&(!d.sa||x.sa===d.sa)&&(!d.district||x.district===d.district)&&(!d.code||r.code===d.code)&&(!from||c>=from)&&(!to||c<=to)}).sort((a,b)=>a.createdAt.localeCompare(b.createdAt));
+    if(!rows.length)return showErr('formErr','No requests match these choices.');
+    await run('Preparing Excel…',loadXlsx);
+    const out=XLSX.write(buildWorkbook(rows),{bookType:'xlsx',type:'array'});
+    const label=d.status==='pending'?'Pending':d.status==='all'?'All':st(d.status).label.replace(/\W+/g,'');
+    download(`Distributor_Requests_${label}${d.type?'_'+d.type:''}_${stamp()}.xlsx`,new Blob([out],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+    closeSheet();toast(`${rows.length} requests exported`);
+  }
+  }catch(err){}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#preview').classList.contains('open'))$('#preview').classList.remove('open');else if(ui.sheet&&!ui.sheet.forced)closeSheet()}});
+
+(async function init(){
+  if(token){try{await refresh();return}catch(e){setToken(null)}}
+  try{loginList=await call('getLoginList')}catch(e){loginList=[]}
+  render();
+})();
+})();
+</script>
+
+</body>
+</html>
