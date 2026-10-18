@@ -229,6 +229,16 @@ a.btn{text-decoration:none;color:var(--ink);display:inline-block}
 .ntable th:not(:first-child),.ntable td:not(:first-child){text-align:right}
 .ntable tbody tr{cursor:pointer}
 .ntable tbody tr:hover td{background:var(--sunk)}
+.bulk{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-bottom:1rem}
+.bulk select{flex:1 1 180px;padding:.5rem .6rem;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.crow{display:flex;width:100%;justify-content:space-between;align-items:center;gap:.6rem;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.55rem .8rem;cursor:pointer}
+.crow:hover{background:var(--sunk)}
+.crow-main{min-width:0;display:flex;flex-direction:column}
+.crow-main b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crow-main small{color:var(--muted);font-size:.84rem}
+.crow-flags{display:flex;flex-wrap:wrap;gap:.25rem;justify-content:flex-end;flex:none;max-width:55%}
+.item.open{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand)}
+.close-row{float:right;font-size:.9rem;font-weight:600}
 </style>
 
 </head>
@@ -424,9 +434,19 @@ function distFiltered(){
   return S.dists.filter(d=>(!ui.dRo||d.ro===ui.dRo)&&(!ui.dSa||d.sa===ui.dSa)&&(!ui.dDist||d.district===ui.dDist)&&(!ui.dAct||(ui.dAct==='on'?d.active:!d.active))&&(!q||(d.code+' '+d.name+' '+d.district+' '+d.email).toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name));
 }
 function soDists(){
-  const all=S.dists,list=distFiltered(),inactiveShown=list.filter(d=>!d.active).length;
+  const all=S.dists,list=distFiltered();if(ui.dCompact===undefined)ui.dCompact=true;
+  const pinsOf=d=>(S.pins&&S.pins[d.code])||[];
+  const full=d=>`<div class="item${ui.dCompact?' open':''}"><div class="grow">
+        <div class="rid">${d.code} ${d.active?'':'<span class="chip c-grey">Inactive</span>'}${ui.dCompact?`<button class="link close-row" data-n="dOpen" data-v="">Close</button>`:''}</div>
+        <div class="row-title">${esc(d.name)}</div>
+        <div class="row-meta"><span>${esc(d.district)}</span><span>${esc(d.sa)}</span><span>${esc(d.ro)}</span>${d.market?`<span>${esc(d.market)}</span>`:''}<span>${esc(d.email)}</span>${d.pinAt?`<span>PIN sent ${fmt(d.pinAt)}</span>`:''}</div>
+        <div class="toggles">${tog(d,'active','Active')}${tog(d,'dct','DCT')}${tog(d,'ads','Aadhaar deseeding')}</div>
+        ${S.pins?`<div class="row-meta" style="margin-top:.5rem"><span>Navya pin codes: <b>${pinsOf(d).length?esc(pinsOf(d).join(', ')):'none'}</b></span></div>`:''}
+      </div><div class="actions"><button class="btn sm" data-a="resetPin" data-v="${d.code}">Email new PIN</button>${S.pins?`<button class="btn sm" data-n="editPins" data-v="${d.code}">Navya pin codes</button>`:''}</div></div>`;
+  const flag=(on,l)=>on?`<span class="chip c-brand">${l}</span>`:'';
+  const compact=d=>`<button class="crow" data-n="dOpen" data-v="${d.code}"><span class="crow-main"><b>${esc(d.name)}</b><small>${d.code}, ${esc(d.district)}</small></span><span class="crow-flags">${d.active?'<span class="chip c-green">Active</span>':'<span class="chip c-grey">Inactive</span>'}${flag(d.dct,'DCT')}${flag(d.ads,'Aadhaar')}${pinsOf(d).length?`<span class="chip c-teal">Navya ${pinsOf(d).length}</span>`:''}</span></button>`;
   return `<section class="hello"><div><h1>Distributors</h1><p class="muted">${all.filter(d=>d.active).length} of ${all.length} active. Only active distributors can log in.</p></div>
-    <div class="actions">${isSuper()?`<label class="btn primary" for="upDB" style="display:inline-block">Upload distributor list</label><input id="upDB" type="file" accept=".xlsx,.xlsm,.xls" hidden>`:''}${inactiveShown?`<button class="btn" data-a="activateShown">Activate ${inactiveShown} shown</button>`:''}</div></section>
+    <div class="actions">${isSuper()?`<label class="btn primary" for="upDB" style="display:inline-block">Upload distributor list</label><input id="upDB" type="file" accept=".xlsx,.xlsm,.xls" hidden>`:''}</div></section>
     <p class="muted small" style="margin:-.5rem 0 1rem">${isSuper()?'Upload Distributor_DB (.xlsm or .xlsx); the DB sheet is read. ':''}When a distributor is activated for the first time, a PIN is emailed to them automatically.</p>
     <div class="filters">
       <select data-f="dRo" aria-label="Regional office">${opts(uniq(all.map(d=>d.ro)),ui.dRo,'All ROs')}</select>
@@ -435,12 +455,17 @@ function soDists(){
       <select data-f="dAct" aria-label="Status">${opts([['on','Active'],['off','Inactive']],ui.dAct,'Active and inactive')}</select>
       <input data-f="dq" type="search" placeholder="Search code, name, district" value="${esc(ui.dq)}" aria-label="Search distributors">
     </div>
-    <div class="list">${list.map(d=>`<div class="item"><div class="grow">
-        <div class="rid">${d.code} ${d.active?'':'<span class="chip c-grey">Inactive</span>'}</div>
-        <div class="row-title">${esc(d.name)}</div>
-        <div class="row-meta"><span>${esc(d.district)}</span><span>${esc(d.sa)}</span><span>${esc(d.ro)}</span>${d.market?`<span>${esc(d.market)}</span>`:''}<span>${esc(d.email)}</span>${d.pinAt?`<span>PIN sent ${fmt(d.pinAt)}</span>`:''}</div>
-        <div class="toggles">${tog(d,'active','Active')}${tog(d,'dct','DCT')}${tog(d,'ads','Aadhaar deseeding')}</div>
-      </div><div class="actions"><button class="btn sm" data-a="resetPin" data-v="${d.code}">Email new PIN</button></div></div>`).join('')||`<div class="empty">${all.length?'No distributors match these filters.':'No distributors yet. Upload the distributor list to begin.'}</div>`}</div>`;
+    ${list.length?`<div class="card bulk"><span>Change all <b>${list.length}</b> shown:</span>
+      <select id="bulkAct" aria-label="Change for all shown"><option value="">Choose a change</option><option value="active:1">Activate (emails PIN to new ones)</option><option value="active:0">Deactivate</option><option value="dct:1">DCT on</option><option value="dct:0">DCT off</option><option value="ads:1">Aadhaar deseeding on</option><option value="ads:0">Aadhaar deseeding off</option></select>
+      <button class="btn primary sm" data-n="bulk">Apply</button></div>`:''}
+    <div class="seg" role="group" aria-label="View"><button data-n="dView" data-v="c" aria-pressed="${!!ui.dCompact}">Compact</button><button data-n="dView" data-v="f" aria-pressed="${!ui.dCompact}">Detailed</button></div>
+    <div class="list">${list.map(d=>!ui.dCompact||ui.dOpen===d.code?full(d):compact(d)).join('')||`<div class="empty">${all.length?'No distributors match these filters.':'No distributors yet. Upload the distributor list to begin.'}</div>`}</div>`;
+}
+function pinsSheet(code){
+  const d=dist(code);ui.sheet={kind:'pins',code};
+  openSheet(head(d.code,esc(d.name))+`<form id="pinsForm" class="card" novalidate>
+    <label class="field"><span>Navya pin codes</span><input name="pins" inputmode="numeric" value="${esc(((S.pins||{})[code]||[]).join(', '))}" placeholder="e.g. 390001, 390004"><small>Separate with commas. New Navya leads from these pin codes go to this distributor. A pin code given to two distributors is shared between them.</small></label>
+    <div class="err" id="pinsErr" hidden></div><button class="btn primary" style="width:100%">Save pin codes</button></form>`);
 }
 function soOfficers(){
   const me=S.me,t=S.transfer;const pending=t?S.officers.find(a=>a.id===t.to):null;
@@ -885,8 +910,8 @@ function leadRow(l,so){
     <div class="actions lead-acts">${l.phone?`<a class="btn sm" href="tel:${esc(l.phone)}">Call</a><a class="btn sm" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}<button class="btn sm primary" data-n="openLead" data-v="${esc(l.id)}">Update</button></div>
   </div>`;
 }
-function nCounts(list){const c={all:list.length,late:0,un:0};N.statuses.forEach(s=>c[s]=0);list.forEach(l=>{c[l.status]=(c[l.status]||0)+1;if(nLate(l))c.late++;if(!l.code)c.un++});return c}
-function nFilter(l,b){return b==='all'||(b==='late'?nLate(l):b==='un'?!l.code:l.status===b)}
+function nCounts(list){const c={all:list.length,late:0,un:0,as:0};N.statuses.forEach(s=>c[s]=0);list.forEach(l=>{c[l.status]=(c[l.status]||0)+1;if(nLate(l))c.late++;if(!l.code)c.un++;else c.as++});return c}
+function nFilter(l,b){return b==='all'||(b==='late'?nLate(l):b==='un'?!l.code:b==='as'?!!l.code:l.status===b)}
 
 function navyaDistView(){
   let body;
@@ -908,7 +933,7 @@ function soNavya(){
   const all=N.leads.filter(l=>!ui.nDist||l.code===ui.nDist),c=nCounts(all);
   const q=ui.nq.trim().toLowerCase();
   const list=all.filter(l=>nFilter(l,ui.nBucket)&&(!q||(l.name+' '+l.phone+' '+l.area+' '+l.pin+' '+l.consumerNo).toLowerCase().includes(q))).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  const tiles=[['all','All leads',''],['New','Not contacted','brand'],['late','Over 24 h','red'],['Contacted','Contacted','violet'],['Visited','Visited','teal'],['Converted','Converted','green'],['Rejected','Rejected','grey'],['un','Unassigned','amber']];
+  const tiles=[['all','All leads',''],['as','Assigned','brand'],['un','Unassigned','amber'],['New','Not contacted','brand'],['late','Over 24 h','red'],['Contacted','Contacted','violet'],['Visited','Visited','teal'],['Converted','Converted','green'],['Rejected','Rejected','grey']];
   const off=(N.navyaDists||[]).filter(d=>!d.active);
   const conv=c.all?Math.round(c.Converted*100/c.all):0;
   let h=`<section class="hello"><div><h1>Navya leads</h1><p class="muted">${c.all} leads, ${c.Converted} converted (${conv}%)</p></div><div class="actions"><button class="btn" data-n="sync">Get new leads now</button><button class="btn" data-n="export">Export to Excel</button></div></section>`;
@@ -947,7 +972,9 @@ function leadSheet(id){
       <div class="err" id="leadErr" hidden></div>
       <button class="btn primary" style="width:100%">Save update</button>
     </form>
-    ${so?`<div class="card"><label class="field"><span>Assign to distributor</span><select id="nAssign">${opts(S.dists.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(d=>[d.code,d.name+' ('+d.district+')']),l.code,l.code?null:'Choose a distributor')}</select></label><button class="btn" data-n="reassign" data-v="${esc(l.id)}">${l.code?'Reassign lead':'Assign lead'}</button><p class="small muted">The distributor gets the lead by email.</p></div>`:''}`);
+    ${so?`<div class="card"><label class="field"><span>Assign to distributor</span><select id="nAssign">${opts(S.dists.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(d=>[d.code,d.name+' ('+d.district+')']),l.code,l.code?null:'Choose a distributor')}</select></label>
+      ${/^\d{6}$/.test(l.pin||'')&&S.pins?(()=>{const more=N.leads.filter(x=>!x.code&&x.pin===l.pin&&x.id!==l.id).length;return `<label class="sw" style="margin-bottom:.6rem"><input type="checkbox" id="nSavePin" ${l.code?'':'checked'}><span>Also send future leads from ${esc(l.pin)} to this distributor${more?` and assign the ${more} other unassigned lead${more>1?'s':''} from it`:''}</span></label>`})():''}
+      <div class="actions"><button class="btn" data-n="reassign" data-v="${esc(l.id)}">${l.code?'Reassign lead':'Assign lead'}</button></div><p class="small muted">The distributor gets the lead by email.</p></div>`:''}`);
 }
 function nReplace(l){const i=N.leads.findIndex(x=>x.id===l.id);if(i>=0)N.leads[i]=l}
 
@@ -956,6 +983,17 @@ document.addEventListener('click',async e=>{
   const a=el.dataset.n,v=el.dataset.v;
   try{switch(a){
   case 'dTab':ui.dTab=v;render();window.scrollTo(0,0);break;
+  case 'dOpen':ui.dOpen=v;render();break;
+  case 'dView':ui.dCompact=v==='c';ui.dOpen='';render();break;
+  case 'editPins':pinsSheet(v);break;
+  case 'bulk':{const sel=$('#bulkAct').value;if(!sel)return toast('Choose a change first.');
+    const [key,on]=sel.split(':'),val=on==='1',list=distFiltered(),lab={active:'Active',dct:'DCT',ads:'Aadhaar deseeding'}[key];
+    const change=list.filter(d=>!!d[key]!==val);if(!change.length)return toast('Nothing to change: all shown already have '+lab+' '+(val?'on':'off')+'.');
+    const newPins=key==='active'&&val?change.filter(d=>!d.pinAt).length:0;
+    if(newPins>S.quota-10&&!confirm(`Only ${Math.max(0,S.quota-10)} PIN emails can go today. The rest stay inactive; run this again tomorrow. Continue?`))return;
+    if(!confirm(`Turn ${lab} ${val?'on':'off'} for ${change.length} distributor${change.length>1?'s':''}?${newPins?`\n\nUp to ${newPins} will get a PIN email.`:''}`))return;
+    const r=await run('Updating…',()=>call('bulkSet',token,change.map(d=>d.code),key,val));await refresh();
+    toast(`${lab} ${val?'on':'off'} for ${r.n}${r.mails?', '+r.mails+' PINs emailed':''}${r.skipped?'. '+r.skipped+' left for tomorrow (email limit)':''}`,7000);break}
   case 'nBucket':ui.nBucket=v;render();break;
   case 'pickDist':ui.nDist=v;ui.nBucket='all';render();break;
   case 'reloadN':await run('Refreshing…',async()=>{N=await call('getNavya',token);S=await call('getState',token)});render();break;
@@ -963,13 +1001,22 @@ document.addEventListener('click',async e=>{
   case 'pickSt':ui.nPick=v;document.querySelectorAll('#nSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
     $('#nConv').hidden=v!=='Converted';$('#nRej').hidden=v!=='Rejected';break;
   case 'reassign':{const code=$('#nAssign').value;if(!code)return toast('Choose a distributor.');
-    const l=await run('Assigning and emailing…',()=>call('reassignLead',token,v,code));nReplace(l);closeSheet();render();toast('Lead assigned to '+l.distName);break}
+    const sp=!!($('#nSavePin')&&$('#nSavePin').checked);const r=await run('Assigning and emailing…',()=>call('reassignLead',token,v,code,sp));N=r.data;closeSheet();
+    if(r.pinAdded){S.pins=S.pins||{};(S.pins[code]=S.pins[code]||[]).push(r.lead.pin)}render();
+    toast('Lead assigned to '+r.lead.distName+(r.pinAdded?'. Pin '+r.lead.pin+' saved for future leads':'')+(r.alsoAssigned?', plus '+r.alsoAssigned+' more':''),6000);break}
   case 'sync':{const r=await run('Checking the Meta sheet…',()=>call('syncNavyaNow',token));N=r.data;render();toast(r.added?r.added+' new lead'+(r.added>1?'s':'')+' added':'No new leads');break}
   case 'export':{await run('Preparing Excel…',loadXlsx);
     const rows=N.leads.map(l=>({'Enquiry date':fmtT(l.date),'Name':l.name,'Mobile':l.phone,'Pin code':l.pin,'Area':l.area,'Has LPG':l.hasLpg,'Platform':l.platform,'Distributor':l.distName,'Dist code':l.code,'Status':l.status,'Contacted':fmtT(l.contactedAt),'Visited':fmtT(l.visitedAt),'Closed':fmtT(l.closedAt),'Consumer no':l.consumerNo,'Connection type':l.connType,'Reject reason':l.reason,'Remarks':l.remarks,'Updated by':l.updatedBy}));
     const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Navya leads');
     download(`Navya_Leads_${stamp()}.xlsx`,new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));toast(rows.length+' leads exported');break}
   }}catch(err){}
+});
+document.addEventListener('submit',async e=>{
+  const f=e.target;if(f.id!=='pinsForm')return;e.preventDefault();
+  const code=ui.sheet.code,val=new FormData(f).get('pins')||'';
+  try{const r=await run('Saving…',()=>call('setPins',token,code,val));S.pins=S.pins||{};S.pins[code]=r.pins;N=null;closeSheet();render();
+    toast('Pin codes saved'+(r.shared.length?'. Shared with another distributor: '+r.shared.join(', '):''),6000)}
+  catch(err){showErr('pinsErr',err.message)}
 });
 document.addEventListener('submit',async e=>{
   const f=e.target;if(f.id!=='leadForm')return;e.preventDefault();
