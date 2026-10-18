@@ -210,6 +210,25 @@ img{max-width:100%}
 .overlay .box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.25rem;display:flex;gap:.7rem;align-items:center;max-width:90%}
 .ocrtext{white-space:pre-wrap;font-size:.85rem;background:var(--sunk);border-radius:8px;padding:.5rem .6rem;max-height:14rem;overflow:auto;margin-top:.4rem}
 
+/* ---------- Navya leads ---------- */
+.row.lead{cursor:default}
+.row.lead:hover{background:var(--surface)}
+.lead-name{font-size:1.05rem}
+.track{display:grid;grid-template-columns:repeat(4,1fr);gap:.25rem;margin:.55rem 0 .45rem}
+.track i{font-style:normal;font-size:.78rem;color:var(--muted);text-align:center}
+.track i::before{content:"";display:block;height:6px;border-radius:3px;background:var(--line);margin-bottom:.2rem}
+.track i.on{color:var(--ink);font-weight:600}
+.track i.on::before{background:var(--c,var(--brand))}
+.c-red .track i.on::before{background:var(--brand)}
+.track.rej i::before{background:repeating-linear-gradient(45deg,var(--line) 0 4px,var(--sunk) 4px 8px)}
+.track.rej i.on::before{background:var(--muted)}
+.lead-acts{margin-top:.55rem}
+.lead-acts .primary{margin-left:auto}
+a.btn{text-decoration:none;color:var(--ink);display:inline-block}
+.ntable-wrap{overflow-x:auto;padding:.4rem .6rem}
+.ntable th:not(:first-child),.ntable td:not(:first-child){text-align:right}
+.ntable tbody tr{cursor:pointer}
+.ntable tbody tr:hover td{background:var(--sunk)}
 </style>
 
 </head>
@@ -357,7 +376,7 @@ function distView(){
   const mine=S.requests.slice().sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
   const g={all:mine,open:mine.filter(r=>OPEN.includes(r.status)),action:mine.filter(r=>r.status==='RSR'),closed:mine.filter(r=>!OPEN.includes(r.status))};
   const list=g[ui.dFilter];const chips=[['all','All'],['open','Open'],['action','Needs your action'],['closed','Closed']];
-  return bar()+`<main class="wrap">
+  return bar()+`<main class="wrap">${distTabs()}
     <section class="hello"><div><h1>${esc(me.name)}</h1><p class="muted">SAP ${me.code}, ${esc(me.district)}${me.dct?', DCT distributor':''}</p><p class="muted small">Updates are emailed to ${esc(me.email)}</p></div>
     <button class="btn primary" data-a="new">Raise a request</button></section>
     ${g.action.length?`<div class="note">${g.action.length===1?'One request needs':g.action.length+' requests need'} corrected documents from you.</div>`:''}
@@ -375,8 +394,8 @@ function transferBanner(){
     <div class="err" id="acceptErr" hidden></div></form>`;
 }
 function soView(){
-  const tabs=[['req','Requests'],['dist','Distributors'],['off','Officers'],['bak','Backup'],['log','Logs']];
-  const body={dist:soDists,off:soOfficers,bak:soBackup,log:soLogs}[ui.soTab]||soRequests;
+  const tabs=[['req','Requests'],['navya','Navya leads'],['dist','Distributors'],['off','Officers'],['bak','Backup'],['log','Logs']];
+  const body={navya:soNavya,dist:soDists,off:soOfficers,bak:soBackup,log:soLogs}[ui.soTab]||soRequests;
   const q=S.quota<20?`<div class="note">Only ${S.quota} emails left today on the portal account. Emails resume tomorrow.</div>`:'';
   return bar()+`<main class="wrap">${transferBanner()}${q}<nav class="tabs" aria-label="Sections">${tabs.map(([k,l])=>`<button data-a="tab" data-v="${k}" ${ui.soTab===k?'aria-current="page"':''}>${l}</button>`).join('')}<button data-a="reload" style="margin-left:auto" aria-label="Refresh">Refresh</button></nav>${body()}</main>`;
 }
@@ -493,7 +512,7 @@ function soLogs(){
     ?(S.logs.map(l=>`<div class="logrow"><span class="muted">${fmtT(l.at)}</span><span><strong>${esc(l.who)}</strong>: ${esc(l.what)}</span></div>`).join('')||'<p class="muted">No activity yet.</p>')
     :(S.mails.map(m=>`<div class="logrow"><span class="muted">${fmtT(m.at)}</span><button data-a="viewMail" data-v="${m.id}"><strong>${esc(m.subject)}</strong><br><span class="muted small">To ${esc(m.to)}${m.att&&m.att.length?`, ${m.att.length} attachment${m.att.length>1?'s':''}`:''}${m.status&&m.status!=='Sent'?` <span class="chip c-red">${esc(m.status)}</span>`:''}</span></button></div>`).join('')||'<p class="muted">No emails yet.</p>')}</div>`;
 }
-function render(){$('#app').innerHTML=!S?loginView():S.role==='so'?soView():distView()}
+function render(){if(!S){N=null;ui.dTab='req'}$('#app').innerHTML=!S?loginView():S.role==='so'?soView():(ui.dTab==='navya'&&S.navya&&S.navya.total?navyaDistView():distView())}
 
 /* ---------- side sheets ---------- */
 function openSheet(html){$('#panel').innerHTML=html;$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';const f=$('#panel .x');f&&f.focus()}
@@ -688,7 +707,7 @@ document.addEventListener('click',async e=>{
   try{switch(a){
   case 'loginRole':ui.loginRole=v;render();break;
   case 'logout':call('logout',token).catch(()=>{});setToken(null);S=null;ui.soTab='req';closeSheet(true);loginList=await call('getLoginList').catch(()=>loginList);render();break;
-  case 'reload':await run('Refreshing…',refresh);break;
+  case 'reload':N=null;await run('Refreshing…',refresh);break;
   case 'dFilter':ui.dFilter=v;render();break;
   case 'bucket':ui.bucket=v;render();break;
   case 'tab':ui.soTab=v;render();window.scrollTo(0,0);break;
@@ -834,6 +853,136 @@ document.addEventListener('submit',async e=>{
   }catch(err){}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#preview').classList.contains('open'))$('#preview').classList.remove('open');else if(ui.sheet&&!ui.sheet.forced)closeSheet()}});
+
+/* =====================================================================
+   NAVYA LEADS (distributor tab + officer tab)
+   ===================================================================== */
+let N=null,nLoading=false;
+Object.assign(ui,{dTab:'req',nBucket:'all',nq:'',nDist:'',nPick:'New'});
+const N_STEPS=['New','Contacted','Visited','Converted'];
+const N_COL={New:'brand',Contacted:'violet',Visited:'teal',Converted:'green',Rejected:'grey'};
+const nAge=l=>l.date?(Date.now()-new Date(l.date))/864e5:0;
+const nLate=l=>l.status==='New'&&nAge(l)>1;
+const nAgeTxt=l=>{const d=nAge(l);if(d<1)return Math.max(1,Math.round(d*24))+' h ago';const n=Math.floor(d);return n+(n===1?' day ago':' days ago')};
+async function loadNavya(){if(nLoading)return;nLoading=true;try{N=await call('getNavya',token)}catch(e){toast(e.message,6000)}finally{nLoading=false;render()}}
+
+function distTabs(){
+  const n=S.navya||{total:0,fresh:0};if(!n.total)return '';
+  return `<nav class="tabs" aria-label="Sections"><button data-n="dTab" data-v="req" ${ui.dTab!=='navya'?'aria-current="page"':''}>Requests</button><button data-n="dTab" data-v="navya" ${ui.dTab==='navya'?'aria-current="page"':''}>Navya leads${n.fresh?` <span class="chip c-red">${n.fresh} new</span>`:''}</button></nav>`;
+}
+function leadRow(l,so){
+  const late=nLate(l),rej=l.status==='Rejected';
+  const idx=rej?N_STEPS.indexOf(l.visitedAt?'Visited':l.contactedAt?'Contacted':'New'):N_STEPS.indexOf(l.status);
+  const wa=String(l.phone||'').replace(/\D/g,'');
+  return `<div class="row lead c-${late?'red':N_COL[l.status]||'grey'}">
+    <div class="row-top"><strong class="lead-name">${esc(l.name||'(no name)')}</strong><span class="chip c-${N_COL[l.status]||'grey'}">${esc(l.status)}</span></div>
+    <div class="row-meta">${so?`<span>${l.code?esc(l.distName):'<b class="late">Not assigned</b>'}</span>`:''}<span>${esc([l.pin,l.area].filter(Boolean).join(', '))}</span>${l.hasLpg?`<span>Has LPG: ${esc(l.hasLpg)}</span>`:''}<span class="${late?'late':''}">${nAgeTxt(l)}</span></div>
+    ${l.dupOf?'<div class="row-meta"><span class="late">Same mobile number as an earlier lead</span></div>':''}
+    <div class="track${rej?' rej':''}">${N_STEPS.map((s,i)=>`<i class="${i<=idx?'on':''}">${s}</i>`).join('')}</div>
+    ${l.status==='Converted'?`<div class="small">Consumer no <b>${esc(l.consumerNo)}</b>, ${esc(l.connType)}</div>`:''}
+    ${rej?`<div class="small">Rejected: <b>${esc(l.reason)}</b></div>`:''}
+    ${l.remarks?`<div class="small muted">${esc(l.remarks)}</div>`:''}
+    <div class="actions lead-acts">${l.phone?`<a class="btn sm" href="tel:${esc(l.phone)}">Call</a><a class="btn sm" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}<button class="btn sm primary" data-n="openLead" data-v="${esc(l.id)}">Update</button></div>
+  </div>`;
+}
+function nCounts(list){const c={all:list.length,late:0,un:0};N.statuses.forEach(s=>c[s]=0);list.forEach(l=>{c[l.status]=(c[l.status]||0)+1;if(nLate(l))c.late++;if(!l.code)c.un++});return c}
+function nFilter(l,b){return b==='all'||(b==='late'?nLate(l):b==='un'?!l.code:l.status===b)}
+
+function navyaDistView(){
+  let body;
+  if(!N){loadNavya();body='<div class="empty">Loading leads…</div>'}
+  else{
+    const list=N.leads.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))),c=nCounts(list);
+    const chips=[['all','All'],['New','New'],['Contacted','Contacted'],['Visited','Visited'],['Converted','Converted'],['Rejected','Rejected']];
+    const shown=list.filter(l=>nFilter(l,ui.nBucket));
+    body=`${c.late?`<div class="note">${c.late===1?'One lead has':c.late+' leads have'} waited more than 24 hours. Please call ${c.late===1?'it':'them'} today.</div>`:''}
+    <div class="seg" role="group" aria-label="Filter leads">${chips.map(([k,l])=>`<button data-n="nBucket" data-v="${k}" aria-pressed="${ui.nBucket===k}">${l} (${c[k]||0})</button>`).join('')}</div>
+    <div class="list">${shown.length?shown.map(l=>leadRow(l,false)).join(''):'<div class="empty">No leads here.</div>'}</div>`;
+  }
+  return bar()+`<main class="wrap">${distTabs()}<section class="hello"><div><h1>Navya leads</h1><p class="muted">Customers in your area who asked about HP Navya. Call new leads within 24 hours and record what happened.</p></div><button class="btn" data-n="reloadN">Refresh</button></section>${body}</main>`;
+}
+
+function soNavya(){
+  if(!N){loadNavya();return '<div class="empty">Loading Navya leads…</div>'}
+  if(N.notSetup)return '<div class="empty">The Navya module is not set up yet. Run <b>setupNavya</b> once from the Apps Script editor.</div>';
+  const all=N.leads.filter(l=>!ui.nDist||l.code===ui.nDist),c=nCounts(all);
+  const q=ui.nq.trim().toLowerCase();
+  const list=all.filter(l=>nFilter(l,ui.nBucket)&&(!q||(l.name+' '+l.phone+' '+l.area+' '+l.pin+' '+l.consumerNo).toLowerCase().includes(q))).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const tiles=[['all','All leads',''],['New','Not contacted','brand'],['late','Over 24 h','red'],['Contacted','Contacted','violet'],['Visited','Visited','teal'],['Converted','Converted','green'],['Rejected','Rejected','grey'],['un','Unassigned','amber']];
+  const off=(N.navyaDists||[]).filter(d=>!d.active);
+  const conv=c.all?Math.round(c.Converted*100/c.all):0;
+  let h=`<section class="hello"><div><h1>Navya leads</h1><p class="muted">${c.all} leads, ${c.Converted} converted (${conv}%)</p></div><div class="actions"><button class="btn" data-n="sync">Get new leads now</button><button class="btn" data-n="export">Export to Excel</button></div></section>`;
+  if(!N.sourceSet)h+='<div class="note">The Meta leads sheet is not linked yet. Fill NAVYA.SOURCE_ID in Code.gs.</div>';
+  if(!N.mailOn)h+='<div class="note">Lead emails to distributors are off. Set NAVYA.MAIL_ON to true in Code.gs after testing.</div>';
+  if(off.length)h+=`<div class="note">${off.length} Navya distributor${off.length>1?'s are':' is'} not active and can't log in: ${off.map(d=>esc(d.name)).join(', ')}. Activate them in the Distributors tab.</div>`;
+  h+=`<div class="tiles">${tiles.map(([k,l,col])=>`<button class="tile ${col?'c-'+col:''}" data-n="nBucket" data-v="${k}" aria-pressed="${ui.nBucket===k}"><b>${c[k]||0}</b><span>${l}</span></button>`).join('')}</div>
+    <div class="filters"><select data-f="nDist" aria-label="Distributor">${opts((N.navyaDists||[]).map(d=>[d.code,d.name]),ui.nDist,'All Navya distributors')}</select>
+    <input data-f="nq" type="search" placeholder="Search name, mobile, area, consumer no" value="${esc(ui.nq)}" aria-label="Search leads"></div>`;
+  if(ui.nBucket==='all'&&!ui.nDist&&!q){
+    const by={};N.leads.forEach(l=>{if(!l.code)return;const b=by[l.code]=by[l.code]||{name:l.distName,t:0,n:0,cv:0,rj:0,late:0};b.t++;if(l.status==='New')b.n++;if(l.status==='Converted')b.cv++;if(l.status==='Rejected')b.rj++;if(nLate(l))b.late++});
+    const rows=Object.keys(by).sort((a,b)=>by[b].t-by[a].t);
+    if(rows.length)h+=`<div class="card ntable-wrap"><table class="mtable ntable"><thead><tr><th>Distributor</th><th>Leads</th><th>New</th><th>Converted</th><th>Rejected</th><th>Over 24 h</th></tr></thead><tbody>${rows.map(k=>{const b=by[k];return `<tr data-n="pickDist" data-v="${k}"><td>${esc(b.name)}</td><td>${b.t}</td><td>${b.n}</td><td>${b.cv}</td><td>${b.rj}</td><td class="${b.late?'late':''}">${b.late}</td></tr>`}).join('')}</tbody></table></div>`;
+    const rs={};N.leads.forEach(l=>{if(l.status==='Rejected')rs[l.reason]=(rs[l.reason]||0)+1});
+    const rk=Object.keys(rs).sort((a,b)=>rs[b]-rs[a]);
+    if(rk.length)h+=`<p class="small muted" style="margin:.75rem 0">Rejection reasons: ${rk.map(k=>esc(k)+' '+rs[k]).join(', ')}</p>`;
+  }
+  h+=`<div class="list" style="margin-top:1rem">${list.length?list.map(l=>leadRow(l,true)).join(''):`<div class="empty">${ui.nBucket==='un'?'Every lead has a distributor.':'No leads match.'}</div>`}</div>`;
+  return h;
+}
+
+function leadSheet(id){
+  const l=N&&N.leads.find(x=>x.id===id);if(!l)return;
+  ui.sheet={kind:'lead',id};ui.nPick=l.status;const so=S.role==='so';
+  const line=(k,v)=>v?`<dt>${k}</dt><dd>${v}</dd>`:'';
+  openSheet(head('Enquiry '+fmtT(l.date),esc(l.name||'(no name)'))+
+    `<div class="card"><dl class="kv">${line('Mobile',l.phone?`<a href="tel:${esc(l.phone)}">${esc(l.phone)}</a>`:'')}${line('Pin code',esc(l.pin))}${line('Area',esc(l.area))}${line('Has LPG connection',esc(l.hasLpg))}${so?line('Distributor',esc(l.distName)||'Not assigned')+line('Lead email',esc(l.mail)):''}${line('Contacted',fmtT(l.contactedAt))}${line('Visited',fmtT(l.visitedAt))}${line('Closed',fmtT(l.closedAt))}${line('Last update',l.updatedAt?fmtT(l.updatedAt)+' by '+esc(l.updatedBy):'')}</dl></div>
+    <form id="leadForm" class="card" novalidate>
+      <div class="field"><span>Status</span><div class="seg" id="nSt">${N.statuses.map(s=>`<button type="button" data-n="pickSt" data-v="${s}" aria-pressed="${s===l.status}">${s}</button>`).join('')}</div></div>
+      <div id="nConv" ${l.status==='Converted'?'':'hidden'}>
+        <label class="field"><span>Consumer number</span><input name="consumerNo" inputmode="numeric" value="${esc(l.consumerNo)}"></label>
+        <label class="field"><span>Connection type</span><select name="connType">${opts(N.connTypes,l.connType,'Select')}</select></label></div>
+      <div id="nRej" ${l.status==='Rejected'?'':'hidden'}>
+        <label class="field"><span>Reason for rejection</span><select name="reason">${opts(N.reasons,l.reason,'Select')}</select></label></div>
+      <label class="field"><span>Remarks</span><textarea name="remarks" placeholder="What did the customer say?">${esc(l.remarks)}</textarea></label>
+      <div class="err" id="leadErr" hidden></div>
+      <button class="btn primary" style="width:100%">Save update</button>
+    </form>
+    ${so?`<div class="card"><label class="field"><span>Assign to distributor</span><select id="nAssign">${opts(S.dists.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(d=>[d.code,d.name+' ('+d.district+')']),l.code,l.code?null:'Choose a distributor')}</select></label><button class="btn" data-n="reassign" data-v="${esc(l.id)}">${l.code?'Reassign lead':'Assign lead'}</button><p class="small muted">The distributor gets the lead by email.</p></div>`:''}`);
+}
+function nReplace(l){const i=N.leads.findIndex(x=>x.id===l.id);if(i>=0)N.leads[i]=l}
+
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-n]');if(!el)return;
+  const a=el.dataset.n,v=el.dataset.v;
+  try{switch(a){
+  case 'dTab':ui.dTab=v;render();window.scrollTo(0,0);break;
+  case 'nBucket':ui.nBucket=v;render();break;
+  case 'pickDist':ui.nDist=v;ui.nBucket='all';render();break;
+  case 'reloadN':await run('Refreshing…',async()=>{N=await call('getNavya',token);S=await call('getState',token)});render();break;
+  case 'openLead':leadSheet(v);break;
+  case 'pickSt':ui.nPick=v;document.querySelectorAll('#nSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+    $('#nConv').hidden=v!=='Converted';$('#nRej').hidden=v!=='Rejected';break;
+  case 'reassign':{const code=$('#nAssign').value;if(!code)return toast('Choose a distributor.');
+    const l=await run('Assigning and emailing…',()=>call('reassignLead',token,v,code));nReplace(l);closeSheet();render();toast('Lead assigned to '+l.distName);break}
+  case 'sync':{const r=await run('Checking the Meta sheet…',()=>call('syncNavyaNow',token));N=r.data;render();toast(r.added?r.added+' new lead'+(r.added>1?'s':'')+' added':'No new leads');break}
+  case 'export':{await run('Preparing Excel…',loadXlsx);
+    const rows=N.leads.map(l=>({'Enquiry date':fmtT(l.date),'Name':l.name,'Mobile':l.phone,'Pin code':l.pin,'Area':l.area,'Has LPG':l.hasLpg,'Platform':l.platform,'Distributor':l.distName,'Dist code':l.code,'Status':l.status,'Contacted':fmtT(l.contactedAt),'Visited':fmtT(l.visitedAt),'Closed':fmtT(l.closedAt),'Consumer no':l.consumerNo,'Connection type':l.connType,'Reject reason':l.reason,'Remarks':l.remarks,'Updated by':l.updatedBy}));
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Navya leads');
+    download(`Navya_Leads_${stamp()}.xlsx`,new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));toast(rows.length+' leads exported');break}
+  }}catch(err){}
+});
+document.addEventListener('submit',async e=>{
+  const f=e.target;if(f.id!=='leadForm')return;e.preventDefault();
+  if(ui.busy)return;const d=Object.fromEntries(new FormData(f));d.status=ui.nPick;
+  if(d.status==='Converted'&&!/^\d{5,15}$/.test((d.consumerNo||'').trim()))return showErr('leadErr','Enter the consumer number (digits only).');
+  if(d.status==='Converted'&&!d.connType)return showErr('leadErr','Choose the connection type.');
+  if(d.status==='Rejected'&&!d.reason)return showErr('leadErr','Choose the reason for rejection.');
+  if(d.status==='Rejected'&&d.reason==='Other'&&!(d.remarks||'').trim())return showErr('leadErr','Write the reason in Remarks when you choose Other.');
+  showErr('leadErr','');ui.busy=true;
+  try{const l=await run('Saving…',()=>call('updateLead',token,ui.sheet.id,d));ui.busy=false;nReplace(l);closeSheet();
+    if(S.role==='dist')S.navya.fresh=N.leads.filter(x=>x.status==='New').length;render();toast('Update saved')}
+  catch(err){ui.busy=false;showErr('leadErr',err.message)}
+});
 
 (async function init(){
   if(token){try{await refresh();return}catch(e){setToken(null)}}
