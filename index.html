@@ -481,27 +481,35 @@ function distSheet(code){
 }
 const WA_STALE=3;
 function waItems(){
-  const map={};const add=(code,k,v)=>{(map[code]=map[code]||{rsr:[],fresh:0,stale:0})[k]=v};
-  S.requests.filter(r=>r.status==='RSR').forEach(r=>{(map[r.code]=map[r.code]||{rsr:[],fresh:0,stale:0}).rsr.push(r.id)});
-  (N&&N.leads||[]).forEach(l=>{if(!l.code||l.status==='Converted'||l.status==='Rejected')return;const m=map[l.code]=map[l.code]||{rsr:[],fresh:0,stale:0};
-    if(nLate(l))m.fresh++;else if(l.status!=='New'&&(Date.now()-new Date(l.updatedAt||l.date))/864e5>WA_STALE)m.stale++});
-  return S.dists.map(d=>({d,m:map[d.code]||{rsr:[],fresh:0,stale:0}})).filter(x=>x.m.rsr.length||x.m.fresh||x.m.stale).sort((a,b)=>a.d.name.localeCompare(b.d.name));
+  const map={};const get=c=>map[c]=map[c]||{rsr:[],leads:[],late:0,stale:0};
+  S.requests.filter(r=>r.status==='RSR').forEach(r=>get(r.code).rsr.push(r.id));
+  (N&&N.leads||[]).forEach(l=>{if(!l.code||l.status==='Converted'||l.status==='Rejected')return;const m=get(l.code);
+    if(l.status==='New'){m.leads.push(l);if(nLate(l))m.late++}
+    else if((Date.now()-new Date(l.updatedAt||l.date))/864e5>WA_STALE)m.stale++});
+  return S.dists.map(d=>({d,m:map[d.code]||{rsr:[],leads:[],late:0,stale:0}})).filter(x=>x.m.rsr.length||x.m.leads.length||x.m.stale).sort((a,b)=>a.d.name.localeCompare(b.d.name));
 }
+const WA_MAX_LEADS=15;
 function waText(d,m){
-  const lines=[];
-  if(m.rsr.length)lines.push(`• ${m.rsr.length} request${m.rsr.length>1?'s need':' needs'} corrected documents: ${m.rsr.join(', ')}`);
-  if(m.fresh)lines.push(`• ${m.fresh} Navya lead${m.fresh>1?'s':''} not yet contacted (over 24 hours)`);
-  if(m.stale)lines.push(`• ${m.stale} Navya lead${m.stale>1?'s':''} with no update for over ${WA_STALE} days`);
-  return `Dear ${d.name},\nPending on Distributor Connect:\n${lines.join('\n')}\nPlease update today: ${S.portalUrl||''}\n– LPG Sales, Baroda`;
+  const out=[`Dear ${d.name},`,'Pending on Distributor Connect:'];
+  if(m.leads.length){
+    const L=m.leads.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    out.push(`• ${L.length} new Navya lead${L.length>1?'s':''} to call:`);
+    L.slice(0,WA_MAX_LEADS).forEach((l,i)=>out.push(`  ${i+1}. ${l.name||'(no name)'}, ${String(l.phone||'').replace(/^\+91/,'')}, ${[l.pin,l.area].filter(Boolean).join(' ')} (${nAgeTxt(l)})`));
+    if(L.length>WA_MAX_LEADS)out.push(`  …and ${L.length-WA_MAX_LEADS} more in the portal`);
+  }
+  if(m.rsr.length)out.push(`• ${m.rsr.length} request${m.rsr.length>1?'s need':' needs'} corrected documents: ${m.rsr.join(', ')}`);
+  if(m.stale)out.push(`• ${m.stale} Navya lead${m.stale>1?'s':''} with no update for over ${WA_STALE} days`);
+  out.push(`After calling, update each lead in the portal: ${S.portalUrl||''}`,'– LPG Sales, Baroda');
+  return out.join('\n');
 }
 function soWa(){
   if(!N){loadNavya();return '<div class="empty">Loading…</div>'}
   ui.waSent=ui.waSent||{};const items=waItems(),noMob=items.filter(x=>!x.d.mobile).length,sent=items.filter(x=>ui.waSent[x.d.code]).length;
   return `<section class="hello"><div><h1>WhatsApp reminders</h1><p class="muted">${items.length} distributor${items.length===1?'':'s'} with pending items${items.length?`, ${sent} sent today`:''}</p></div><button class="btn" data-a="reload">Refresh</button></section>
-    <p class="muted small" style="margin:-.5rem 0 1rem">Tap Send: WhatsApp opens with the message ready, then tap send there. Counts: requests marked "Resubmission required", Navya leads not contacted for 24 hours, and leads not updated for ${WA_STALE} days.</p>
+    <p class="muted small" style="margin:-.5rem 0 1rem">Tap Send: WhatsApp opens with the message ready, then tap send there. Each message lists every new Navya lead (name, mobile, pin and area), requests marked "Resubmission required", and leads not updated for ${WA_STALE} days.</p>
     ${noMob?`<div class="note">${noMob} of them ${noMob>1?'have':'has'} no mobile number. Use Add mobile to fill it in.</div>`:''}
     <div class="list">${items.length?items.map(({d,m})=>`<div class="item"><div class="grow"><div class="row-title"><b>${esc(d.name)}</b> ${ui.waSent[d.code]?'<span class="chip c-green">Sent</span>':''}</div>
-      <div class="row-meta"><span>${d.code}</span><span>${d.mobile?esc(d.mobile):'<b class="late">No mobile</b>'}</span>${m.rsr.length?`<span>${m.rsr.length} requests</span>`:''}${m.fresh?`<span>${m.fresh} new leads</span>`:''}${m.stale?`<span>${m.stale} stale leads</span>`:''}</div>
+      <div class="row-meta"><span>${d.code}</span><span>${d.mobile?esc(d.mobile):'<b class="late">No mobile</b>'}</span>${m.rsr.length?`<span>${m.rsr.length} request${m.rsr.length>1?'s':''}</span>`:''}${m.leads.length?`<span${m.late?' class="late"':''}>${m.leads.length} new lead${m.leads.length>1?'s':''}${m.late?`, ${m.late} over 24 h`:''}</span>`:''}${m.stale?`<span>${m.stale} not updated</span>`:''}</div>
       <pre class="wa-msg">${esc(waText(d,m))}</pre></div>
       <div class="actions">${d.mobile?`<a class="btn primary sm wa" data-n="waSent" data-v="${d.code}" href="https://wa.me/91${esc(d.mobile)}?text=${encodeURIComponent(waText(d,m))}" target="_blank" rel="noopener">Send</a>`:`<button class="btn sm" data-n="editDist" data-v="${d.code}">Add mobile</button>`}</div></div>`).join(''):'<div class="empty">Nothing pending with distributors right now.</div>'}</div>`;
 }
