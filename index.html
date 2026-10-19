@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23fff'/%3E%3Crect x='14' y='6' width='36' height='52' rx='12' fill='%230B4EA2'/%3E%3Crect x='20' y='42' width='24' height='6' rx='3' fill='%23C8102E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Hind:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   box-sizing:border-box;
@@ -23,6 +23,7 @@
   --red:#B00E28;--red-soft:#FBE6E9;--amber:#8F5400;--amber-soft:#FDF0D9;
   --green:#1C7445;--green-soft:#E1F3E8;--violet:#5B3FA6;--violet-soft:#ECE7F8;
   --teal:#0E6E7A;--teal-soft:#DFF2F4;--focus:#F2A900;--overlay:rgba(20,33,61,.45);
+  --hero:#0B4EA2;--hero-ink:#FFFFFF;--hp-red:#D7182A;--grid:rgba(11,78,162,.07);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
@@ -30,7 +31,7 @@
     --brand:#4C8FE6;--brand-soft:#1C2F52;--onbrand:#08142A;--stripe:#E5455C;
     --red:#FF8A9A;--red-soft:#3A1A24;--amber:#F2B65C;--amber-soft:#3A2C14;
     --green:#6FD39C;--green-soft:#15352A;--violet:#B6A2F0;--violet-soft:#2A2448;
-    --teal:#6CD0DB;--teal-soft:#123338;--overlay:rgba(0,0,0,.6);
+    --teal:#6CD0DB;--teal-soft:#123338;--overlay:rgba(0,0,0,.6);--hero:#123E7C;--hero-ink:#FFFFFF;--hp-red:#E5455C;--grid:rgba(124,170,235,.06);
   }
 }
 :root[data-theme="dark"]{
@@ -38,12 +39,12 @@
   --brand:#4C8FE6;--brand-soft:#1C2F52;--onbrand:#08142A;--stripe:#E5455C;
   --red:#FF8A9A;--red-soft:#3A1A24;--amber:#F2B65C;--amber-soft:#3A2C14;
   --green:#6FD39C;--green-soft:#15352A;--violet:#B6A2F0;--violet-soft:#2A2448;
-  --teal:#6CD0DB;--teal-soft:#123338;--overlay:rgba(0,0,0,.6);
+  --teal:#6CD0DB;--teal-soft:#123338;--overlay:rgba(0,0,0,.6);--hero:#123E7C;--hero-ink:#FFFFFF;--hp-red:#E5455C;--grid:rgba(124,170,235,.06);
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:Hind,"Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+body{background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;color:var(--ink);font-family:Hind,"Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
 h1,h2,h3,.rid,.brandmark,.tile b,.bigpin{font-family:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif}
 h1{font-size:1.75rem;line-height:1.15;margin:0;font-weight:700}
 h2{font-size:1.4rem;line-height:1.2;margin:0;font-weight:600}
@@ -241,6 +242,49 @@ a.btn{text-decoration:none;color:var(--ink);display:inline-block}
 .close-row{float:right;font-size:.9rem;font-weight:600}
 .wa-msg{white-space:pre-wrap;font-family:inherit;font-size:.86rem;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:.5rem .65rem;margin:.5rem 0 0;color:var(--ink)}
 a.btn.primary{color:var(--onbrand)}
+.rep-h{font-size:1.05rem;margin:1.25rem 0 .5rem}
+.ntable tr.tot td{border-top:2px solid var(--line)}
+.toggles select{padding:.25rem .5rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:.9rem}
+.acc td:not(:first-child),.acc th:not(:first-child){text-align:center}
+.acc input{width:1.15rem;height:1.15rem;accent-color:var(--brand)}
+.bar-in button+button{margin-left:.4rem}
+/* ---------- HP Gas / Navya branding (CSS only, no images) ---------- */
+.hpbadge{display:inline-flex;align-items:center;font:700 .78rem/1 "Barlow Semi Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;background:#fff;color:var(--hp-red);border:2px solid var(--hp-red);border-radius:6px;padding:.28rem .45rem;flex:none}
+.bar .hpbadge{border-color:#fff}
+.bar-logo{height:32px;width:auto;flex:none}
+.bar .mark{display:none}
+.mark{width:18px;height:26px;border-radius:6px 6px 4px 4px;background:#fff;position:relative;flex:none;box-shadow:inset 0 7px 0 var(--hp-red)}
+.login{min-height:100vh;display:grid;place-items:center;padding:1.25rem 1rem}
+.login-wrap{width:100%;max-width:920px;display:grid;grid-template-columns:1.05fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(20,33,61,.12)}
+.hero{background:var(--hero);color:var(--hero-ink);padding:1.75rem 2.25rem 1.5rem 1.75rem;position:relative;clip-path:polygon(0 0,100% 0,88% 100%,0 100%);display:flex;flex-direction:column;gap:.9rem}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero-top{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.hero-logo{height:40px;width:auto}
+.hero-kicker{font-weight:600;font-size:.92rem;opacity:.92}
+.hero-title{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;font-size:2.4rem;line-height:1;text-transform:uppercase;letter-spacing:.01em;margin-top:.4rem}
+.hero-title span{padding:.18rem .5rem .1rem;transform:rotate(-1.5deg)}
+.hero-title .hb{background:#fff;color:var(--hero)}
+.hero-title .hr{background:#fff;color:var(--hp-red)}
+.hero-sub{font-size:1.02rem;max-width:22rem;opacity:.95}
+.hero-foot{display:flex;align-items:flex-end;gap:1rem;margin-top:auto}
+.hero-tag{font-size:.95rem;opacity:.95}
+.hero-tag b{display:block;font-family:"Barlow Semi Condensed","Arial Narrow",sans-serif;font-size:1.6rem;letter-spacing:.02em}
+/* composite cylinder, drawn in CSS */
+.cyl{width:58px;height:84px;position:relative;flex:none;border-radius:16px 16px 10px 10px;background:linear-gradient(#22408f,#1a3478);border:2px solid rgba(255,255,255,.85);box-shadow:inset 0 -9px 0 var(--hp-red),inset 0 16px 0 var(--hp-red)}
+.cyl::before{content:"";position:absolute;left:50%;top:-12px;width:30px;height:14px;transform:translateX(-50%);border:5px solid var(--hp-red);border-bottom:0;border-radius:8px 8px 0 0}
+.cyl i,.cyl::after{content:"";position:absolute;top:24px;bottom:16px;width:9px;border-radius:5px;background:rgba(244,214,190,.85)}
+.cyl i{left:11px}.cyl::after{right:11px}
+.login-card{border:0;border-radius:0;padding:1.75rem 1.5rem;max-width:none;align-self:center}
+.login-h{font-size:1.5rem;margin-bottom:.9rem;color:var(--ink)}
+@media (max-width:760px){
+  .login{place-items:start center;padding:.75rem}
+  .login-wrap{grid-template-columns:1fr}
+  .hero{clip-path:polygon(0 0,100% 0,100% 86%,0 100%);padding:1.25rem 1.25rem 2rem;gap:.55rem}
+  .hero-title{font-size:1.85rem;flex-direction:row;flex-wrap:wrap}
+  .hero-sub,.hero-foot{display:none}
+  .login-card{padding:1.25rem}
+}
 </style>
 
 </head>
@@ -269,8 +313,11 @@ const TYPES={
   ADS:{name:'Aadhaar deseeding',sheet:'Aadhaar Deseeding',hint:'Remove Aadhaar seeding from a connection',gate:'ads',members:1,
     fields:[CN,{k:'consumerName',label:'Name of person to be deseeded',req:1},{k:'aadhaar4',label:'Aadhaar of person to be deseeded (last 4 digits)',req:1,mode:'numeric',max:4,a4:1,help:'Last 4 digits only. Do not enter the full Aadhaar number.'},{k:'reason',label:'Reason',type:'select',req:1,options:['Consumer deceased','Wrong Aadhaar seeded','Duplicate seeding','Other']},{k:'rationNo',label:'Latest ration card number',req:1,help:'The card that no longer carries the name of the person to be deseeded.'},{k:'details',label:'Details',type:'textarea'}],
     uploads:[{k:'ration',label:'Latest ration card copy',req:1,scan:'ration'},{k:'other',label:'Other documents (death certificate, declaration etc.)'}]},
-  SVM:{name:'Name change / SV modification',sheet:'Name change - SV',hint:'Name change, or cylinder and SD change',
-    fields:[CN,{k:'svNo',label:'SV number',req:1},{k:'modType',label:'Change required',type:'select',req:1,options:['Name change','Cylinder and SD change']},{k:'details',label:'Details of change',type:'textarea',req:1}],
+  SVM:{name:'SV modification',sheet:'SV modification',hint:'Cylinder and SD change on the SV',
+    fields:[CN,{k:'svNo',label:'SV number',req:1},{k:'modType',label:'Change required',type:'select',req:1,options:['Cylinder and SD change','Other']},{k:'details',label:'Details of change',type:'textarea',req:1}],
+    uploads:[{k:'sv',label:'Original SV copy / Affidavit',req:1,scan:'sv'}]},
+  NCH:{name:'Name change',sheet:'Name change',hint:'Change the consumer name on the connection',
+    fields:[CN,{k:'svNo',label:'SV number',req:1},{k:'consumerName',label:'Present name',req:1},{k:'newName',label:'New name',req:1},{k:'details',label:'Reason / details',type:'textarea',req:1}],
     uploads:[{k:'sv',label:'Original SV copy / Affidavit',req:1,scan:'sv'}]},
   RCU:{name:'Ration card updation',sheet:'Ration Card Updation',hint:"Update a consumer's ration card number",
     fields:[CN,CNAME,{k:'rationNo',label:'New ration card number',req:1}],uploads:[{k:'ration',label:'Ration card copy',req:1,scan:'ration'}]},
@@ -344,19 +391,32 @@ const ui={loginRole:'dist',lastCode:'',lastEmail:'',dFilter:'all',soTab:'req',bu
   bkPeriod:'6',bkFrom:'',bkTo:'',lastBackup:null,restoreFile:null,logView:'act',
   pending:{},members:[],sheet:null,importData:null,busy:false};
 const dist=code=>(S&&S.dists||[]).find(d=>d.code===code)||(S&&S.me&&S.me.code===code?S.me:{code,name:code,district:'',sa:'',ro:'',email:code+'@hpgas.hpcl.in'});
+/* Official logo (optional): put the HP Gas logo file in the GitHub repo next to index.html, e.g. logo.svg,
+   and set its full address here. Keep it small (SVG or PNG under 20 KB). Empty = text badge, no image to load. */
+const LOGO_URL='https://vado-gas-portal.github.io/Portal/logo.svg';
+const brandBadge=cls=>LOGO_URL?`<img class="${cls}" src="${LOGO_URL}" alt="HP Gas" height="32" decoding="async" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} hpbadge',textContent:'HP GAS'}))">`:`<span class="${cls} hpbadge">HP GAS</span>`;
 const isSuper=()=>!!(S&&S.sup);
+const canEdit=()=>!S||S.role!=='so'||S.edit!==false;
+const canUsers=()=>!!(S&&S.users);
+const saLabel=sa=>{const t=String(sa||'').replace(/\s*LPG\s*SA$/i,'').trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());return 'LPG Sales, '+(t||(S&&S.roName)||'')};
 const allFiles=r=>r.history.flatMap((h,hi)=>(h.files||[]).map((f,fi)=>Object.assign({},f,{hi,fi,stage:st(h.s).label,at:h.at})));
 
 /* ---------- page views ---------- */
 function bar(){
-  const who=S.role==='so'?`${esc(S.me.name)}<br><small>${S.sup?'Super admin':'Officer'}, ${esc(S.me.sa)}</small>`:`${esc(S.me.name)}<br><small>SAP ${S.me.code}</small>`;
-  return `<header class="bar"><div class="bar-in"><div class="brandmark"><span class="mark" aria-hidden="true"></span>Distributor Connect</div><div class="who">${who}</div><button data-a="logout">Log out</button></div></header>`;
+  const who=S.role==='so'?`${esc(S.me.name)}<br><small>${esc(S.me.roleName||'Officer')}${S.edit===false?' (view only)':''}, ${esc(S.me.sa)}</small>`:`${esc(S.me.name)}<br><small>SAP ${S.me.code}</small>`;
+  return `<header class="bar"><div class="bar-in"><div class="brandmark">${brandBadge('bar-logo')}<span class="mark" aria-hidden="true"></span><span>Distributor Connect</span></div><div class="who">${who}</div>${S.role==='so'?'<button data-n="myAcc">My account</button>':''}<button data-a="logout">Log out</button></div></header>`;
 }
 function loginView(){
   const isD=ui.loginRole==='dist';
-  return `<main class="login"><div class="login-card">
-    <div class="brandmark"><span class="mark" aria-hidden="true"></span>Distributor Connect</div>
-    <p class="muted" style="margin:.25rem 0 1.25rem">LPG distributor request portal</p>
+  return `<main class="login"><div class="login-wrap">
+    <section class="hero">
+      <div class="hero-top">${brandBadge('hero-logo')}<span class="hero-kicker">LPG Sales, ${esc((window.RO_LABEL)||'Surat RO')}</span></div>
+      <h1 class="hero-title"><span class="hb">Distributor</span><span class="hr">Connect.</span></h1>
+      <p class="hero-sub">Requests, Navya leads and reminders in one place.</p>
+      <div class="hero-foot"><div class="cyl" aria-hidden="true"><i></i></div><p class="hero-tag"><b>Navya</b> New India, New Energy</p></div>
+    </section>
+    <div class="login-card">
+    <h2 class="login-h">Log in</h2>
     <div class="seg" role="group" aria-label="Log in as">
       <button type="button" data-a="loginRole" data-v="dist" aria-pressed="${isD}">Distributor</button>
       <button type="button" data-a="loginRole" data-v="so" aria-pressed="${!isD}">Sales Officer / Admin</button>
@@ -370,7 +430,7 @@ function loginView(){
       <button class="btn primary" style="width:100%">Log in</button>
     </form>
     <p style="margin-top:.85rem;text-align:center"><button class="link" data-a="${isD?'forgotPin':'forgotPwd'}">${isD?'Forgot PIN? Email me a new one':'Forgot password? Email me a temporary one'}</button></p>
-  </div></main>`;
+  </div></div></main>`;
 }
 function row(r,showDist){
   const s=st(r.status),t=TYPES[r.type],d=dist(r.code);
@@ -390,10 +450,11 @@ function distView(){
   const list=g[ui.dFilter];const chips=[['all','All'],['open','Open'],['action','Needs your action'],['closed','Closed']];
   return bar()+`<main class="wrap">${distTabs()}
     <section class="hello"><div><h1>${esc(me.name)}</h1><p class="muted">SAP ${me.code}, ${esc(me.district)}${me.dct?', DCT distributor':''}</p><p class="muted small">Updates are emailed to ${esc(me.email)}</p></div>
-    <button class="btn primary" data-a="new">Raise a request</button></section>
+    ${(S.types||[]).length?'<button class="btn primary" data-a="new">Raise a request</button>':''}</section>
+    ${(S.types||[]).length?'':'<div class="note">Requests are not open for your sales area yet. Your sales officer will let you know when they are.</div>'}
     ${g.action.length?`<div class="note">${g.action.length===1?'One request needs':g.action.length+' requests need'} corrected documents from you.</div>`:''}
     <div class="seg" role="group" aria-label="Filter requests">${chips.map(([k,l])=>`<button data-a="dFilter" data-v="${k}" aria-pressed="${ui.dFilter===k}">${l} (${g[k].length})</button>`).join('')}</div>
-    <div class="list">${list.length?list.map(r=>row(r,false)).join(''):`<div class="empty">${ui.dFilter==='all'?'You have not raised any requests yet.<br><button class="btn primary" data-a="new">Raise a request</button>':'No requests here.'}</div>`}</div></main>`;
+    <div class="list">${list.length?list.map(r=>row(r,false)).join(''):`<div class="empty">${ui.dFilter==='all'?((S.types||[]).length?'You have not raised any requests yet.<br><button class="btn primary" data-a="new">Raise a request</button>':'No requests yet.'):'No requests here.'}</div>`}</div></main>`;
 }
 const BUCKETS=[['action','Needs your action',r=>r.status==='SUB'||r.status==='RSB','brand'],['REV','Under review',r=>r.status==='REV','violet'],['RSR','With distributor',r=>r.status==='RSR','amber'],['CMP','Completed',r=>r.status==='CMP','green'],['REJ','Rejected',r=>r.status==='REJ','red'],['all','All requests',()=>true,'']];
 function transferBanner(){
@@ -406,9 +467,10 @@ function transferBanner(){
     <div class="err" id="acceptErr" hidden></div></form>`;
 }
 function soView(){
-  const tabs=[['req','Requests'],['navya','Navya leads'],['wa','WhatsApp reminders'],['dist','Distributors'],['off','Officers'],['bak','Backup'],['log','Logs']];
-  const body={navya:soNavya,wa:soWa,dist:soDists,off:soOfficers,bak:soBackup,log:soLogs}[ui.soTab]||soRequests;
-  const q=S.quota<20?`<div class="note">Only ${S.quota} emails left today on the portal account. Emails resume tomorrow.</div>`:'';
+  const tabs=[['req','Requests'],['navya','Navya leads'],['wa','Reminders'],['rep','Reports'],['dist','Distributors']].concat(canUsers()?[['bulk','Bulk actions'],['acc','Request access'],['off','Officers'],['bak','Backup'],['log','Logs']]:[]);
+  const SUPER_TABS=['bulk','acc','off','bak','log'];if(SUPER_TABS.includes(ui.soTab)&&!canUsers())ui.soTab='req';
+  const body={navya:soNavya,wa:soWa,rep:soReports,dist:soDists,bulk:soBulk,acc:soAccess,off:soOfficers,bak:soBackup,log:soLogs}[ui.soTab]||soRequests;
+  const q=(S.quota<20?`<div class="note">Only ${S.quota} emails left today on the portal account. Emails resume tomorrow.</div>`:'')+(S.edit===false?'<div class="note">You have view-only access. Ask the super admin to switch on Edit.</div>':'');
   return bar()+`<main class="wrap">${transferBanner()}${q}<nav class="tabs" aria-label="Sections">${tabs.map(([k,l])=>`<button data-a="tab" data-v="${k}" ${ui.soTab===k?'aria-current="page"':''}>${l}</button>`).join('')}<button data-a="reload" style="margin-left:auto" aria-label="Refresh">Refresh</button></nav>${body()}</main>`;
 }
 function reqFilterBase(){
@@ -448,8 +510,22 @@ function soDists(){
   const flag=(on,l)=>on?`<span class="chip c-brand">${l}</span>`:'';
   const compact=d=>`<button class="crow" data-n="dOpen" data-v="${d.code}"><span class="crow-main"><b>${esc(d.name)}</b><small>${d.code}, ${esc(d.district)}</small></span><span class="crow-flags">${d.active?'<span class="chip c-green">Active</span>':'<span class="chip c-grey">Inactive</span>'}${flag(d.dct,'DCT')}${flag(d.ads,'Aadhaar')}${pinsOf(d).length?`<span class="chip c-teal">Navya ${pinsOf(d).length}</span>`:''}</span></button>`;
   return `<section class="hello"><div><h1>Distributors</h1><p class="muted">${all.filter(d=>d.active).length} of ${all.length} active. Only active distributors can log in.</p></div>
-    <div class="actions"><button class="btn primary" data-n="addDist">Add distributor</button>${isSuper()?`<label class="btn" for="upDB" style="display:inline-block">Upload distributor list</label><input id="upDB" type="file" accept=".xlsx,.xlsm,.xls" hidden>`:''}</div></section>
-    <p class="muted small" style="margin:-.5rem 0 1rem">${isSuper()?'Upload Distributor_DB (.xlsm or .xlsx); the DB sheet is read. ':''}When a distributor is activated for the first time, a PIN is emailed to them automatically.</p>
+    <div class="actions"><button class="btn primary" data-n="addDist">Add distributor</button><label class="btn" for="upDL" style="display:inline-block">Upload with mobile/email</label><input id="upDL" type="file" accept=".xlsx,.xls,.csv" hidden><button class="btn" data-n="dlTemplate">Download template</button>${isSuper()?`<label class="btn" for="upDB" style="display:inline-block">Upload Distributor_DB</label><input id="upDB" type="file" accept=".xlsx,.xlsm,.xls" hidden>`:''}</div></section>
+    <p class="muted small" style="margin:-.5rem 0 1rem">Upload with mobile/email: fill the template (one row per distributor) and upload; you see a check before anything is saved. Blank cells never erase saved data. ${isSuper()?'Distributor_DB (.xlsm or .xlsx) still works for the full list. ':''}When a distributor is activated for the first time, a PIN is emailed to them automatically.</p>
+    <div class="filters">
+      <select data-f="dRo" aria-label="Regional office">${opts(uniq(all.map(d=>d.ro)),ui.dRo,'All ROs')}</select>
+      ${isSuper()?`<select data-f="dSa" aria-label="Sales area">${opts(uniq(all.map(d=>d.sa)),ui.dSa,'All sales areas')}</select>`:''}
+      <select data-f="dDist" aria-label="District">${opts(uniq(all.map(d=>d.district)),ui.dDist,'All districts')}</select>
+      <select data-f="dAct" aria-label="Status">${opts([['on','Active'],['off','Inactive']],ui.dAct,'Active and inactive')}</select>
+      <input data-f="dq" type="search" placeholder="Search code, name, district" value="${esc(ui.dq)}" aria-label="Search distributors">
+    </div>
+    <div class="seg" role="group" aria-label="View"><button data-n="dView" data-v="c" aria-pressed="${!!ui.dCompact}">Compact</button><button data-n="dView" data-v="f" aria-pressed="${!ui.dCompact}">Detailed</button></div>
+    <div class="list">${list.map(d=>!ui.dCompact||ui.dOpen===d.code?full(d):compact(d)).join('')||`<div class="empty">${all.length?'No distributors match these filters.':'No distributors yet. Upload the distributor list to begin.'}</div>`}</div>`;
+}
+function soBulk(){
+  const all=S.dists,list=distFiltered();if(ui.dCompact===undefined)ui.dCompact=true;
+  const flag=(on,l)=>on?`<span class="chip c-brand">${l}</span>`:'';
+  return `<section class="hello"><div><h1>Bulk actions</h1><p class="muted">Filter the list, then change all distributors shown in one go. Super admin only.</p></div></section>
     <div class="filters">
       <select data-f="dRo" aria-label="Regional office">${opts(uniq(all.map(d=>d.ro)),ui.dRo,'All ROs')}</select>
       ${isSuper()?`<select data-f="dSa" aria-label="Sales area">${opts(uniq(all.map(d=>d.sa)),ui.dSa,'All sales areas')}</select>`:''}
@@ -460,8 +536,23 @@ function soDists(){
     ${list.length?`<div class="card bulk"><span>Change all <b>${list.length}</b> shown:</span>
       <select id="bulkAct" aria-label="Change for all shown"><option value="">Choose a change</option><option value="active:1">Activate (emails PIN to new ones)</option><option value="active:0">Deactivate</option><option value="dct:1">DCT on</option><option value="dct:0">DCT off</option><option value="ads:1">Aadhaar deseeding on</option><option value="ads:0">Aadhaar deseeding off</option></select>
       <button class="btn primary sm" data-n="bulk">Apply</button></div>`:''}
-    <div class="seg" role="group" aria-label="View"><button data-n="dView" data-v="c" aria-pressed="${!!ui.dCompact}">Compact</button><button data-n="dView" data-v="f" aria-pressed="${!ui.dCompact}">Detailed</button></div>
-    <div class="list">${list.map(d=>!ui.dCompact||ui.dOpen===d.code?full(d):compact(d)).join('')||`<div class="empty">${all.length?'No distributors match these filters.':'No distributors yet. Upload the distributor list to begin.'}</div>`}</div>`;
+    <div class="list">${list.map(d=>`<div class="crow" style="cursor:default"><span class="crow-main"><b>${esc(d.name)}</b><small>${d.code}, ${esc(d.district)}, ${esc(d.sa)}</small></span><span class="crow-flags">${d.active?'<span class="chip c-green">Active</span>':'<span class="chip c-grey">Inactive</span>'}${flag(d.dct,'DCT')}${flag(d.ads,'Aadhaar')}</span></div>`).join('')||'<div class="empty">No distributors match these filters.</div>'}</div>`;
+}
+function soAccess(){
+  const types=S.reqTypes||[],m=S.reqAccess||{};
+  const sas=uniq(S.dists.map(d=>d.sa).concat(Object.keys(m))).filter(Boolean).sort();
+  return `<section class="hello"><div><h1>Request access</h1><p class="muted">Distributors see the Requests menu only for the request types switched on for their sales area. Transport load also needs DCT on the distributor, and Aadhaar deseeding needs Aadhaar deseeding on the distributor.</p></div></section>
+    <div class="card ntable-wrap"><table class="mtable ntable acc"><thead><tr><th>Sales area</th>${types.map(([k,n])=>`<th>${esc(n)}</th>`).join('')}</tr></thead><tbody>${sas.map(sa=>`<tr><td>${esc(sa)}</td>${types.map(([k])=>`<td><input type="checkbox" aria-label="${esc(k+' '+sa)}" data-acc="${esc(sa)}|${k}" ${m[sa]&&m[sa][k]?'checked':''}></td>`).join('')}</tr>`).join('')||`<tr><td colspan="${types.length+1}" class="muted">No sales areas yet. Upload distributors first.</td></tr>`}</tbody></table></div>
+    <p class="small muted">Every change is recorded in Logs. Requests already raised stay visible to the distributor even if a type is switched off.</p>`;
+}
+function myAccSheet(){
+  const me=S.me;ui.sheet={kind:'acc'};
+  openSheet(head(esc(me.roleName),'My account')+`<div class="card"><dl class="kv"><dt>Name</dt><dd>${esc(me.name)}</dd><dt>Email</dt><dd>${esc(me.email)}</dd><dt>Sales area</dt><dd>${esc(me.sa)}</dd><dt>Role</dt><dd>${esc(me.roleName)}${S.edit===false?' (view only)':''}</dd></dl>
+    ${S.sup?`<div class="toggles" style="margin-top:.75rem"><label class="sw"><input type="checkbox" data-cc="1" ${me.cc?'checked':''}><span>Also email me copies for other sales areas</span></label></div>`:''}
+    ${me.role==='officer'||me.role==='super'?`<h3 style="margin-top:1rem">Emails to distributors from my Outlook</h3>
+    <div class="toggles"><label class="sw"><input type="checkbox" data-relay="${me.id}" ${me.relay?'checked':''}><span>Send ${esc(me.sa)} distributor emails from ${esc(me.email)}</span></label></div>
+    <p class="small muted">Switch on only after your "Portal Outbox" flow is working in Power Automate. While it is off, emails go from the portal account with replies coming to you.${S.outbox?` Waiting in outbox: ${S.outbox.queued}; relayed today: ${S.outbox.sentToday}.`:''}</p>`:''}
+    <div class="actions" style="margin-top:.75rem"><button class="btn" data-a="changePwd">Change my password</button></div></div>`);
 }
 function distSheet(code){
   const d=code?dist(code):null,isNew=!d;ui.sheet={kind:'dist',code:code||'',isNew};
@@ -481,37 +572,44 @@ function distSheet(code){
 }
 const WA_STALE=3;
 function waItems(){
-  const map={};const get=c=>map[c]=map[c]||{rsr:[],leads:[],late:0,stale:0};
+  const map={};const get=c=>map[c]=map[c]||{rsr:[],leads:[],late:0,stale:[]};
   S.requests.filter(r=>r.status==='RSR').forEach(r=>get(r.code).rsr.push(r.id));
-  (N&&N.leads||[]).forEach(l=>{if(!l.code||l.status==='Converted'||l.status==='Rejected')return;const m=get(l.code);
+  (N&&N.leads||[]).forEach(l=>{if(!l.code||l.status==='Converted'||l.status==='Rejected')return;const m=get(l.code);   // converted or rejected leads never appear
     if(l.status==='New'){m.leads.push(l);if(nLate(l))m.late++}
-    else if((Date.now()-new Date(l.updatedAt||l.date))/864e5>WA_STALE)m.stale++});
-  return S.dists.map(d=>({d,m:map[d.code]||{rsr:[],leads:[],late:0,stale:0}})).filter(x=>x.m.rsr.length||x.m.leads.length||x.m.stale).sort((a,b)=>a.d.name.localeCompare(b.d.name));
+    else if((Date.now()-new Date(l.updatedAt||l.date))/864e5>WA_STALE)m.stale.push(l)});
+  return S.dists.map(d=>({d,m:map[d.code]||{rsr:[],leads:[],late:0,stale:[]}})).filter(x=>x.m.rsr.length||x.m.leads.length||x.m.stale.length).sort((a,b)=>a.d.name.localeCompare(b.d.name));
 }
 const WA_MAX_LEADS=15;
+const remN=(kind,id)=>((S.reminders||{})[kind]||{})[id]||0;
+const remTxt=n=>n?` – reminded ${n} time${n>1?'s':''} before`:'';
 function waText(d,m){
   const out=[`Dear ${d.name},`,'Pending on Distributor Connect:'];
   if(m.leads.length){
     const L=m.leads.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
     out.push(`• ${L.length} new Navya lead${L.length>1?'s':''} to call:`);
-    L.slice(0,WA_MAX_LEADS).forEach((l,i)=>out.push(`  ${i+1}. ${l.name||'(no name)'}, ${String(l.phone||'').replace(/^\+91/,'')}, ${[l.pin,l.area].filter(Boolean).join(' ')} (${nAgeTxt(l)})`));
+    L.slice(0,WA_MAX_LEADS).forEach((l,i)=>out.push(`  ${i+1}. ${l.name||'(no name)'}, ${String(l.phone||'').replace(/^\+91/,'')}, ${[l.pin,l.area].filter(Boolean).join(' ')} (${nAgeTxt(l)})${remTxt(remN('leads',l.id))}`));
     if(L.length>WA_MAX_LEADS)out.push(`  …and ${L.length-WA_MAX_LEADS} more in the portal`);
   }
-  if(m.rsr.length)out.push(`• ${m.rsr.length} request${m.rsr.length>1?'s need':' needs'} corrected documents: ${m.rsr.join(', ')}`);
-  if(m.stale)out.push(`• ${m.stale} Navya lead${m.stale>1?'s':''} with no update for over ${WA_STALE} days`);
-  out.push(`After calling, update each lead in the portal: ${S.portalUrl||''}`,'– LPG Sales, Baroda');
+  if(m.rsr.length)out.push(`• ${m.rsr.length} request${m.rsr.length>1?'s need':' needs'} corrected documents: ${m.rsr.map(id=>id+(remN('reqs',id)?` (reminded ${remN('reqs',id)}×)`:'')).join(', ')}`);
+  if(m.stale.length)out.push(`• ${m.stale.length} Navya lead${m.stale.length>1?'s':''} with no update for over ${WA_STALE} days: ${m.stale.slice(0,10).map(l=>l.name).join(', ')}`);
+  out.push(`After calling, update each lead in the portal: ${S.portalUrl||''}`,'– '+saLabel(d.sa));
   return out.join('\n');
 }
+function waIds(m){return {leads:m.leads.concat(m.stale).map(l=>l.id),reqs:m.rsr}}
 function soWa(){
   if(!N){loadNavya();return '<div class="empty">Loading…</div>'}
-  ui.waSent=ui.waSent||{};const items=waItems(),noMob=items.filter(x=>!x.d.mobile).length,sent=items.filter(x=>ui.waSent[x.d.code]).length;
-  return `<section class="hello"><div><h1>WhatsApp reminders</h1><p class="muted">${items.length} distributor${items.length===1?'':'s'} with pending items${items.length?`, ${sent} sent today`:''}</p></div><button class="btn" data-a="reload">Refresh</button></section>
-    <p class="muted small" style="margin:-.5rem 0 1rem">Tap Send: WhatsApp opens with the message ready, then tap send there. Each message lists every new Navya lead (name, mobile, pin and area), requests marked "Resubmission required", and leads not updated for ${WA_STALE} days.</p>
+  const items=waItems(),noMob=items.filter(x=>!x.d.mobile).length,today=new Date().toDateString();
+  const last=c=>(S.reminders&&S.reminders.last||{})[c];
+  const sent=items.filter(x=>last(x.d.code)&&new Date(last(x.d.code).at).toDateString()===today).length;
+  return `<section class="hello"><div><h1>Reminders</h1><p class="muted">${items.length} distributor${items.length===1?'':'s'} with pending items${items.length?`, ${sent} reminded today`:''}</p></div><button class="btn" data-a="reload">Refresh</button></section>
+    <p class="muted small" style="margin:-.5rem 0 1rem">Each message lists every new Navya lead, requests marked "Resubmission required" and leads with no update for ${WA_STALE} days. Converted and rejected leads drop out automatically. Every reminder is recorded, and the message shows how often each item was chased before. ${S.mgr?'Reminders are sent by the sales officers; you can follow them here.':'<b>Send WhatsApp</b> opens WhatsApp with the message ready; <b>Send email</b> emails it to the distributor.'}</p>
     ${noMob?`<div class="note">${noMob} of them ${noMob>1?'have':'has'} no mobile number. Use Add mobile to fill it in.</div>`:''}
-    <div class="list">${items.length?items.map(({d,m})=>`<div class="item"><div class="grow"><div class="row-title"><b>${esc(d.name)}</b> ${ui.waSent[d.code]?'<span class="chip c-green">Sent</span>':''}</div>
-      <div class="row-meta"><span>${d.code}</span><span>${d.mobile?esc(d.mobile):'<b class="late">No mobile</b>'}</span>${m.rsr.length?`<span>${m.rsr.length} request${m.rsr.length>1?'s':''}</span>`:''}${m.leads.length?`<span${m.late?' class="late"':''}>${m.leads.length} new lead${m.leads.length>1?'s':''}${m.late?`, ${m.late} over 24 h`:''}</span>`:''}${m.stale?`<span>${m.stale} not updated</span>`:''}</div>
-      <pre class="wa-msg">${esc(waText(d,m))}</pre></div>
-      <div class="actions">${d.mobile?`<a class="btn primary sm wa" data-n="waSent" data-v="${d.code}" href="https://wa.me/91${esc(d.mobile)}?text=${encodeURIComponent(waText(d,m))}" target="_blank" rel="noopener">Send</a>`:`<button class="btn sm" data-n="editDist" data-v="${d.code}">Add mobile</button>`}</div></div>`).join(''):'<div class="empty">Nothing pending with distributors right now.</div>'}</div>`;
+    <div class="list">${items.length?items.map(({d,m})=>{const L=last(d.code),t=waText(d,m),ids=waIds(m);
+      const leadsRem=m.leads.filter(l=>remN('leads',l.id)).length;
+      return `<div class="item"><div class="grow"><div class="row-title"><b>${esc(d.name)}</b> ${L&&new Date(L.at).toDateString()===today?`<span class="chip c-green">Reminded today (${esc(L.ch)})</span>`:''}</div>
+      <div class="row-meta"><span>${d.code}</span><span>${d.mobile?esc(d.mobile):'<b class="late">No mobile</b>'}</span>${m.leads.length?`<span${m.late?' class="late"':''}>${m.leads.length} new lead${m.leads.length>1?'s':''}${m.late?`, ${m.late} over 24 h`:''}${leadsRem?`, ${leadsRem} already reminded`:''}</span>`:''}${m.rsr.length?`<span>${m.rsr.length} request${m.rsr.length>1?'s':''}</span>`:''}${m.stale.length?`<span>${m.stale.length} not updated</span>`:''}${L?`<span>Last reminder: ${fmt(L.at)}, ${esc(L.ch)}, ${esc(L.by)}</span>`:''}</div>
+      <pre class="wa-msg">${esc(t)}</pre></div>
+      <div class="actions">${S.mgr?'':d.mobile?`<a class="btn primary sm wa" data-n="waSent" data-v="${d.code}" data-ids="${esc(JSON.stringify(ids))}" href="https://wa.me/91${esc(d.mobile)}?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Send WhatsApp</a>`:`<button class="btn sm" data-n="editDist" data-v="${d.code}">Add mobile</button>`}${S.mgr?'':`<button class="btn sm" data-n="waMail" data-v="${d.code}">Send email</button>`}</div></div>`}).join(''):'<div class="empty">Nothing pending with distributors right now.</div>'}</div>`;
 }
 function pinsSheet(code){
   const d=dist(code);ui.sheet={kind:'pins',code};
@@ -521,20 +619,28 @@ function pinsSheet(code){
 }
 function soOfficers(){
   const me=S.me,t=S.transfer;const pending=t?S.officers.find(a=>a.id===t.to):null;
-  let html=`<section class="hello"><div><h1>Officers and admins</h1><p class="muted">Officers see and manage only their own sales area. The super admin sees all.</p></div></section>
-  <div class="card"><dl class="kv"><dt>Name</dt><dd>${esc(me.name)}</dd><dt>Email</dt><dd>${esc(me.email)}</dd><dt>Sales area</dt><dd>${esc(me.sa)}</dd><dt>Role</dt><dd>${S.sup?'Super admin':'Officer'}</dd></dl>
-    <p class="small" style="margin-top:.75rem">You get a copy of every request email for ${esc(me.sa)} distributors: new requests, every status change and every resubmission. Distributors' replies to these emails come to ${esc(me.email)}.</p>
+  const roleChip=a=>({super:'c-violet',admin_manager:'c-teal',manager:'c-teal',officer:'c-grey'}[a.role]||'c-grey');
+  let html=`<section class="hello"><div><h1>Officers and managers</h1><p class="muted">Sales officers manage their own sales area. Managers and the super admin see the whole ${esc(S.roName||'RO')}; managers can do everything except add or remove users.</p></div></section>
+  <div class="card"><dl class="kv"><dt>Name</dt><dd>${esc(me.name)}</dd><dt>Email</dt><dd>${esc(me.email)}</dd><dt>Sales area</dt><dd>${esc(me.sa)}</dd><dt>Role</dt><dd>${esc(me.roleName)}${S.edit===false?' (view only)':''}</dd></dl>
+    <p class="small" style="margin-top:.75rem">You get a copy of every request email for ${esc(me.sa)} distributors. Distributors' replies come to ${esc(me.email)}.</p>
     ${S.sup?`<div class="toggles" style="margin-top:.5rem"><label class="sw"><input type="checkbox" data-cc="1" ${me.cc?'checked':''}><span>Also email me copies for other sales areas</span></label></div>`:''}
+    ${me.role==='officer'||me.role==='super'?`<h3 style="margin-top:1rem">Emails to distributors from my Outlook</h3>
+    <div class="toggles"><label class="sw"><input type="checkbox" data-relay="${me.id}" ${me.relay?'checked':''}><span>Send ${esc(me.sa)} distributor emails from ${esc(me.email)}</span></label></div>
+    <p class="small muted">Switch on only after your "Portal Outbox" flow is working in Power Automate (see the guide). While it is off, emails go from the portal account with replies coming to you.${S.outbox?` Waiting in outbox: ${S.outbox.queued}; relayed today: ${S.outbox.sentToday}.`:''}</p>`:''}
     <div class="actions" style="margin-top:.75rem"><button class="btn" data-a="changePwd">Change my password</button></div></div>`;
-  if(!isSuper())return html+`<p class="muted" style="margin-top:1rem">Only the super admin can add or remove officers.</p>`;
-  html+=`<h3>All officers</h3><div class="list">${S.officers.map(a=>`<div class="item"><div class="grow"><div class="row-title">${esc(a.name)} ${a.id===me.id?'<span class="chip c-brand">You</span>':''} ${a.role==='super'?'<span class="chip c-violet">Super admin</span>':''} ${a.temp?'<span class="chip c-amber">Temporary password</span>':''}</div><div class="row-meta"><span>${esc(a.email)}</span><span>${esc(a.sa)}</span>${a.role==='super'&&a.cc?'<span>Gets copies for all sales areas</span>':''}</div></div>
-    ${a.id!==me.id?`<div class="actions"><button class="btn sm" data-a="resetAdmin" data-v="${a.id}">Reset password</button>${a.role!=='super'?`<button class="btn sm ghost" data-a="removeAdmin" data-v="${a.id}">Remove</button>`:''}</div>`:''}</div>`).join('')}</div>
-  <h3>Add an officer</h3>
+  if(!isSuper())return html;
+  html+=`<h3>All users</h3><div class="list">${S.officers.map(a=>`<div class="item"><div class="grow"><div class="row-title">${esc(a.name)} ${a.id===me.id?'<span class="chip c-brand">You</span>':''} <span class="chip ${roleChip(a)}">${esc(a.roleName)}</span> ${a.role.indexOf('manager')>=0?`<span class="chip ${a.edit?'c-green':'c-grey'}">${a.edit?'Edit':'View only'}</span>`:''} ${a.relay?'<span class="chip c-green">Outlook relay on</span>':''} ${a.temp?'<span class="chip c-amber">Temporary password</span>':''}</div><div class="row-meta"><span>${esc(a.email)}</span><span>${esc(a.sa)}</span>${a.cc?'<span>Gets copies for all sales areas</span>':''}</div>
+      ${canUsers()&&a.role!=='super'?`<div class="toggles">${a.role.indexOf('manager')>=0?`<label class="sw"><input type="checkbox" data-uedit="${a.id}" ${a.edit?'checked':''}><span>Edit access</span></label>`:''}<label class="sw"><input type="checkbox" data-relay="${a.id}" ${a.relay?'checked':''}><span>Outlook relay</span></label>
+        <select data-urole="${a.id}" aria-label="Role">${opts([['officer','Sales officer'],['admin_manager','Admin manager'],['manager','Manager']],a.role)}</select></div>`:''}</div>
+    ${canUsers()&&a.id!==me.id?`<div class="actions"><button class="btn sm" data-a="resetAdmin" data-v="${a.id}">Reset password</button>${a.role!=='super'?`<button class="btn sm ghost" data-a="removeAdmin" data-v="${a.id}">Remove</button>`:''}</div>`:''}</div>`).join('')}</div>`;
+  if(!canUsers())return html+`<p class="muted" style="margin-top:1rem">Only the super admin can add or remove officers and managers.</p>`;
+  html+=`<h3>Add an officer or manager</h3>
   <form id="adminForm" class="card" novalidate>
+    <label class="field"><span>Role *</span><select name="role">${opts([['officer','Sales officer (own sales area)'],['admin_manager','Admin manager (whole RO, starts with Edit)'],['manager','Manager (whole RO, starts with Edit)']],'officer')}</select></label>
     <div class="two"><label class="field"><span>Name *</span><input name="name"></label><label class="field"><span>Email *</span><input name="email" type="email" placeholder="name@hpcl.in"></label></div>
-    <label class="field"><span>Sales area *</span><input name="sa" list="saList" placeholder="e.g. BARODA LPG SA"><datalist id="saList">${uniq(S.dists.map(d=>d.sa).concat(S.officers.map(a=>a.sa))).map(s=>`<option value="${esc(s)}">`).join('')}</datalist><small>The officer sees only distributors with this sales area in the distributor list.</small></label>
-    <p class="muted small" style="margin-bottom:.75rem">A temporary password and the portal link are emailed to them. They set their own password at first login.</p>
-    <div class="err" id="adminErr" hidden></div><button class="btn primary">Add officer</button></form>
+    <label class="field"><span>Sales area</span><input name="sa" list="saList" placeholder="e.g. BARODA LPG SA"><datalist id="saList">${uniq(S.dists.map(d=>d.sa).concat(S.officers.map(a=>a.sa))).map(s=>`<option value="${esc(s)}">`).join('')}</datalist><small>Needed for sales officers. Managers can leave it empty; they see the whole RO.</small></label>
+    <p class="muted small" style="margin-bottom:.75rem">A temporary password and the portal link are emailed to them. They set their own password at first login. Switch Edit off any time to make a manager view-only.</p>
+    <div class="err" id="adminErr" hidden></div><button class="btn primary">Add user</button></form>
   <h3>Transfer super admin role</h3>`;
   if(pending)html+=`<div class="card"><p>Waiting for <strong>${esc(pending.name)}</strong> to enter the code sent to ${esc(pending.email)}. It expires at ${new Date(t.exp).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'})}. Nothing changes until then.</p><div class="actions" style="margin-top:.6rem"><button class="btn" data-a="cancelTransfer">Cancel transfer</button></div></div>`;
   else{const others=S.officers.filter(a=>a.id!==me.id&&!a.temp);
@@ -589,15 +695,15 @@ function soLogs(){
     ?(S.logs.map(l=>`<div class="logrow"><span class="muted">${fmtT(l.at)}</span><span><strong>${esc(l.who)}</strong>: ${esc(l.what)}</span></div>`).join('')||'<p class="muted">No activity yet.</p>')
     :(S.mails.map(m=>`<div class="logrow"><span class="muted">${fmtT(m.at)}</span><button data-a="viewMail" data-v="${m.id}"><strong>${esc(m.subject)}</strong><br><span class="muted small">To ${esc(m.to)}${m.att&&m.att.length?`, ${m.att.length} attachment${m.att.length>1?'s':''}`:''}${m.status&&m.status!=='Sent'?` <span class="chip c-red">${esc(m.status)}</span>`:''}</span></button></div>`).join('')||'<p class="muted">No emails yet.</p>')}</div>`;
 }
-function render(){if(!S){N=null;ui.dTab='req'}$('#app').innerHTML=!S?loginView():S.role==='so'?soView():(ui.dTab==='navya'&&S.navya&&S.navya.total?navyaDistView():distView())}
+function render(){if(!S){N=null;ui.dTab='req'}$('#app').innerHTML=!S?loginView():S.role==='so'?soView():((ui.dTab==='navya'||(!(S.types||[]).length&&!S.requests.length))&&S.navya&&S.navya.total?navyaDistView():distView());lockUI($('#app'))}
 
 /* ---------- side sheets ---------- */
-function openSheet(html){$('#panel').innerHTML=html;$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';const f=$('#panel .x');f&&f.focus()}
+function openSheet(html){$('#panel').innerHTML=html;lockUI($('#panel'));$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';const f=$('#panel .x');f&&f.focus()}
 function closeSheet(force){if(ui.busy&&!force)return;$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';ui.sheet=null;ui.pending={};ui.members=[]}
 const head=(small,title,noClose)=>`<div class="panel-head"><div>${small?`<div class="rid muted">${small}</div>`:''}<h2>${title}</h2></div>${noClose?'':'<button class="x" data-a="close" aria-label="Close">×</button>'}</div>`;
 function typePicker(){
   const me=S.me;ui.sheet={kind:'pick'};
-  openSheet(head('','Raise a request')+`<div class="types">${Object.entries(TYPES).filter(([k,t])=>!t.gate||me[t.gate]).map(([k,t])=>`<button class="type" data-a="pickType" data-v="${k}"><strong>${t.name}</strong><span>${t.hint}</span></button>`).join('')}</div>`);
+  openSheet(head('','Raise a request')+`<div class="types">${Object.entries(TYPES).filter(([k,t])=>(!t.gate||me[t.gate])&&(S.types||[]).includes(k)).map(([k,t])=>`<button class="type" data-a="pickType" data-v="${k}"><strong>${t.name}</strong><span>${t.hint}</span></button>`).join('')}</div>`);
 }
 function fieldHtml(f){
   const a=`name="${f.k}" ${f.mode?`inputmode="${f.mode}"`:''} ${f.max?`maxlength="${f.max}"`:''} ${f.ph?`placeholder="${esc(f.ph)}"`:''}`;
@@ -853,6 +959,17 @@ document.addEventListener('change',async e=>{
   if(t.dataset.tog){const d=dist(t.dataset.code),k=t.dataset.tog,val=t.checked,lab={active:'Active',dct:'DCT',ads:'Aadhaar deseeding'}[k];
     const r=await run('Saving…',()=>call('toggleDist',token,d.code,k,val)).catch(()=>{t.checked=!val;return null});
     if(r){d[k]=val;await refresh();toast(`${lab} ${val?'on':'off'} for ${d.name}${r.pinSent?'. PIN emailed.':''}`)}return}
+  if(t.dataset.acc){const [sa,type]=t.dataset.acc.split('|'),val=t.checked;
+    const m=await run('Saving…',()=>call('setReqAccess',token,sa,type,val)).catch(()=>{t.checked=!val;return null});if(m){S.reqAccess=m;toast(`${(S.reqTypes.find(x=>x[0]===type)||[])[1]} ${val?'on':'off'} for ${sa}`)}return}
+  if(t.dataset.relay){const id=t.dataset.relay,val=t.checked;
+    if(val&&id===S.me.id&&!confirm('Switch on only if your "Portal Outbox" flow in Power Automate is saved and tested. Continue?')){t.checked=false;return}
+    await run('Saving…',()=>call('setRelay',token,id,val)).catch(()=>{t.checked=!val});await refresh();toast(val?'Distributor emails will now go from Outlook':'Distributor emails will go from the portal account');return}
+  if(t.dataset.uedit){const id=t.dataset.uedit,val=t.checked;await run('Saving…',()=>call('setOfficer',token,id,{edit:val})).catch(()=>{t.checked=!val});await refresh();toast(val?'Edit access on':'Now view only');return}
+  if(t.dataset.urole){const id=t.dataset.urole,o=S.officers.find(x=>x.id===id);if(!confirm(`Change ${o.name}'s role?`)){render();return}
+    await run('Saving…',()=>call('setOfficer',token,id,{role:t.value}));await refresh();toast('Role changed');return}
+  if(t.id==='upDL'){const file=t.files[0];t.value='';if(!file)return;
+    try{const rows=await run('Reading the file…',()=>readDistTemplate(file));ui.dlRows=rows;
+      const r=await run('Checking…',()=>call('importDistList',token,rows,false));dlPreview(r)}catch(err){toast(err.message,7000)}return}
   if(t.dataset.cc){await run('Saving…',()=>call('setCc',token,t.checked));S.me.cc=t.checked;toast(t.checked?'You will also get copies for other sales areas':'Copies for other sales areas turned off');return}
   if(t.id&&t.id.startsWith('file_')){
     const slot=t.dataset.slot,list=[...t.files];t.value='';ui.pending[slot]=ui.pending[slot]||[];
@@ -896,8 +1013,8 @@ document.addEventListener('submit',async e=>{
   }
   else if(f.id==='adminForm'){
     const d=Object.fromEntries(new FormData(f));
-    const r=await run('Adding officer…',()=>call('addOfficer',token,d.name,d.email,d.sa)).catch(err=>{showErr('adminErr',err.message);return null});
-    if(!r)return;await refresh();toast(`Officer added. Login details emailed to ${r.email}.`,6000);
+    const r=await run('Adding…',()=>call('addOfficer',token,d.name,d.email,d.sa,d.role)).catch(err=>{showErr('adminErr',err.message);return null});
+    if(!r)return;await refresh();toast(`User added. Login details emailed to ${r.email}.`,6000);
   }
   else if(f.id==='pwdForm'){
     const d=Object.fromEntries(new FormData(f));
@@ -935,7 +1052,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#preview').cl
    NAVYA LEADS (distributor tab + officer tab)
    ===================================================================== */
 let N=null,nLoading=false;
-Object.assign(ui,{dTab:'req',nBucket:'all',nq:'',nDist:'',nPick:'New'});
+Object.assign(ui,{dTab:'req',nBucket:'all',nq:'',nDist:'',nSa:'',rpSa:'',nPick:'New',nPer:'all',nFrom:'',nTo:''});
+const PERIODS=[['all','All'],['1m','Last 1 month'],['3m','Last quarter'],['1y','Last year'],['custom','Custom dates']];
+function periodRange(){const now=new Date(),back=m=>{const d=new Date(now);d.setMonth(d.getMonth()-m);return d};
+  if(ui.nPer==='1m')return [back(1),null];if(ui.nPer==='3m')return [back(3),null];if(ui.nPer==='1y')return [back(12),null];
+  if(ui.nPer==='custom')return [ui.nFrom?new Date(ui.nFrom+'T00:00:00'):null,ui.nTo?new Date(ui.nTo+'T23:59:59'):null];return [null,null]}
+function inPeriod(l){const [a,b]=periodRange(),d=new Date(l.date);return (!a||d>=a)&&(!b||d<=b)}
+function navyaFiltered(){return N.leads.filter(l=>(!ui.nDist||l.code===ui.nDist)&&(!ui.nSa||l.sa===ui.nSa)&&inPeriod(l))}
+function periodBar(){return `<div class="seg" role="group" aria-label="Period">${PERIODS.map(([k,l])=>`<button data-n="nPer" data-v="${k}" aria-pressed="${ui.nPer===k}">${l}</button>`).join('')}</div>${ui.nPer==='custom'?`<div class="filters"><label class="field" style="margin:0"><span>From</span><input type="date" data-f="nFrom" value="${esc(ui.nFrom)}"></label><label class="field" style="margin:0"><span>To</span><input type="date" data-f="nTo" value="${esc(ui.nTo)}"></label></div>`:''}`}
 const N_STEPS=['New','Contacted','Visited','Converted'];
 const N_COL={New:'brand',Contacted:'violet',Visited:'teal',Converted:'green',Rejected:'grey'};
 const nAge=l=>l.date?(Date.now()-new Date(l.date))/864e5:0;
@@ -944,7 +1068,7 @@ const nAgeTxt=l=>{const d=nAge(l);if(d<1)return Math.max(1,Math.round(d*24))+' h
 async function loadNavya(){if(nLoading)return;nLoading=true;try{N=await call('getNavya',token)}catch(e){toast(e.message,6000)}finally{nLoading=false;render()}}
 
 function distTabs(){
-  const n=S.navya||{total:0,fresh:0};if(!n.total)return '';
+  const n=S.navya||{total:0,fresh:0};if(!n.total||!((S.types||[]).length||S.requests.length))return '';
   return `<nav class="tabs" aria-label="Sections"><button data-n="dTab" data-v="req" ${ui.dTab!=='navya'?'aria-current="page"':''}>Requests</button><button data-n="dTab" data-v="navya" ${ui.dTab==='navya'?'aria-current="page"':''}>Navya leads${n.fresh?` <span class="chip c-red">${n.fresh} new</span>`:''}</button></nav>`;
 }
 function leadRow(l,so){
@@ -953,7 +1077,7 @@ function leadRow(l,so){
   const wa=String(l.phone||'').replace(/\D/g,'');
   return `<div class="row lead c-${late?'red':N_COL[l.status]||'grey'}">
     <div class="row-top"><strong class="lead-name">${esc(l.name||'(no name)')}</strong><span class="chip c-${N_COL[l.status]||'grey'}">${esc(l.status)}</span></div>
-    <div class="row-meta">${so?`<span>${l.code?esc(l.distName):'<b class="late">Not assigned</b>'}</span>`:''}<span>${esc([l.pin,l.area].filter(Boolean).join(', '))}</span>${l.hasLpg?`<span>Has LPG: ${esc(l.hasLpg)}</span>`:''}<span class="${late?'late':''}">${nAgeTxt(l)}</span></div>
+    <div class="row-meta">${so?`<span>${l.code?esc(l.distName):'<b class="late">Not assigned</b>'+(l.sa?' ('+esc(l.sa)+')':l.district?' ('+esc(l.district)+')':'')}</span>`:''}<span>${esc([l.pin,l.area].filter(Boolean).join(', '))}</span>${l.hasLpg?`<span>Has LPG: ${esc(l.hasLpg)}</span>`:''}<span class="${late?'late':''}">${nAgeTxt(l)}</span></div>
     ${l.dupOf?'<div class="row-meta"><span class="late">Same mobile number as an earlier lead</span></div>':''}
     <div class="track${rej?' rej':''}">${N_STEPS.map((s,i)=>`<i class="${i<=idx?'on':''}">${s}</i>`).join('')}</div>
     ${l.status==='Converted'?`<div class="small">Consumer no <b>${esc(l.consumerNo)}</b>, ${esc(l.connType)}</div>`:''}
@@ -982,24 +1106,25 @@ function navyaDistView(){
 function soNavya(){
   if(!N){loadNavya();return '<div class="empty">Loading Navya leads…</div>'}
   if(N.notSetup)return '<div class="empty">The Navya module is not set up yet. Run <b>setupNavya</b> once from the Apps Script editor.</div>';
-  const all=N.leads.filter(l=>!ui.nDist||l.code===ui.nDist),c=nCounts(all);
+  const all=navyaFiltered(),c=nCounts(all);
   const q=ui.nq.trim().toLowerCase();
   const list=all.filter(l=>nFilter(l,ui.nBucket)&&(!q||(l.name+' '+l.phone+' '+l.area+' '+l.pin+' '+l.consumerNo).toLowerCase().includes(q))).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   const tiles=[['all','All leads',''],['as','Assigned','brand'],['un','Unassigned','amber'],['New','Not contacted','brand'],['late','Over 24 h','red'],['Contacted','Contacted','violet'],['Visited','Visited','teal'],['Converted','Converted','green'],['Rejected','Rejected','grey']];
   const off=(N.navyaDists||[]).filter(d=>!d.active);
   const conv=c.all?Math.round(c.Converted*100/c.all):0;
   let h=`<section class="hello"><div><h1>Navya leads</h1><p class="muted">${c.all} leads, ${c.Converted} converted (${conv}%)</p></div><div class="actions"><button class="btn" data-n="sync">Get new leads now</button><button class="btn" data-n="export">Export to Excel</button></div></section>`;
+  h+=periodBar();
   if(!N.sourceSet)h+='<div class="note">The Meta leads sheet is not linked yet. Fill NAVYA.SOURCE_ID in Code.gs.</div>';
   if(!N.mailOn)h+='<div class="note">Lead emails to distributors are off. Set NAVYA.MAIL_ON to true in Code.gs after testing.</div>';
   if(off.length)h+=`<div class="note">${off.length} Navya distributor${off.length>1?'s are':' is'} not active and can't log in: ${off.map(d=>esc(d.name)).join(', ')}. Activate them in the Distributors tab.</div>`;
   h+=`<div class="tiles">${tiles.map(([k,l,col])=>`<button class="tile ${col?'c-'+col:''}" data-n="nBucket" data-v="${k}" aria-pressed="${ui.nBucket===k}"><b>${c[k]||0}</b><span>${l}</span></button>`).join('')}</div>
-    <div class="filters"><select data-f="nDist" aria-label="Distributor">${opts((N.navyaDists||[]).map(d=>[d.code,d.name]),ui.nDist,'All Navya distributors')}</select>
+    <div class="filters">${isSuper()?`<select data-f="nSa" aria-label="Sales area">${opts(uniq((N.navyaDists||[]).map(d=>d.sa).concat(N.leads.map(l=>l.sa).filter(Boolean))),ui.nSa,'All sales areas')}</select>`:''}<select data-f="nDist" aria-label="Distributor">${opts((N.navyaDists||[]).filter(d=>!ui.nSa||d.sa===ui.nSa).map(d=>[d.code,d.name]),ui.nDist,'All Navya distributors')}</select>
     <input data-f="nq" type="search" placeholder="Search name, mobile, area, consumer no" value="${esc(ui.nq)}" aria-label="Search leads"></div>`;
   if(ui.nBucket==='all'&&!ui.nDist&&!q){
-    const by={};N.leads.forEach(l=>{if(!l.code)return;const b=by[l.code]=by[l.code]||{name:l.distName,t:0,n:0,cv:0,rj:0,late:0};b.t++;if(l.status==='New')b.n++;if(l.status==='Converted')b.cv++;if(l.status==='Rejected')b.rj++;if(nLate(l))b.late++});
+    const by={};navyaFiltered().forEach(l=>{if(!l.code)return;const b=by[l.code]=by[l.code]||{name:l.distName,t:0,n:0,cv:0,rj:0,late:0};b.t++;if(l.status==='New')b.n++;if(l.status==='Converted')b.cv++;if(l.status==='Rejected')b.rj++;if(nLate(l))b.late++});
     const rows=Object.keys(by).sort((a,b)=>by[b].t-by[a].t);
     if(rows.length)h+=`<div class="card ntable-wrap"><table class="mtable ntable"><thead><tr><th>Distributor</th><th>Leads</th><th>New</th><th>Converted</th><th>Rejected</th><th>Over 24 h</th></tr></thead><tbody>${rows.map(k=>{const b=by[k];return `<tr data-n="pickDist" data-v="${k}"><td>${esc(b.name)}</td><td>${b.t}</td><td>${b.n}</td><td>${b.cv}</td><td>${b.rj}</td><td class="${b.late?'late':''}">${b.late}</td></tr>`}).join('')}</tbody></table></div>`;
-    const rs={};N.leads.forEach(l=>{if(l.status==='Rejected')rs[l.reason]=(rs[l.reason]||0)+1});
+    const rs={};navyaFiltered().forEach(l=>{if(l.status==='Rejected')rs[l.reason]=(rs[l.reason]||0)+1});
     const rk=Object.keys(rs).sort((a,b)=>rs[b]-rs[a]);
     if(rk.length)h+=`<p class="small muted" style="margin:.75rem 0">Rejection reasons: ${rk.map(k=>esc(k)+' '+rs[k]).join(', ')}</p>`;
   }
@@ -1039,8 +1164,22 @@ document.addEventListener('click',async e=>{
   case 'dView':ui.dCompact=v==='c';ui.dOpen='';render();break;
   case 'editPins':pinsSheet(v);break;
   case 'addDist':distSheet(null);break;
+  case 'dlTemplate':{await run('Preparing…',loadXlsx);const ex=S.sup?[]:[];
+    const head=['SAP Code','Name'].concat(S.sup?['Sales Area']:[]).concat(['District','Regional Office','Market Type','Mobile','Email']);
+    const rows=[head].concat(S.dists.slice(0,3).map(d=>[d.code,d.name].concat(S.sup?[d.sa]:[]).concat([d.district,d.ro,d.market,d.mobile,d.email])));
+    const wb=XLSX.utils.book_new(),ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=head.map(()=>({wch:20}));XLSX.utils.book_append_sheet(wb,ws,'Distributors');
+    download('Distributor_upload_template.xlsx',new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));toast('Template downloaded. The first rows are examples from your list; replace them.',6000);break}
+  case 'dlCommit':{const r=await run('Saving…',()=>call('importDistList',token,ui.dlRows,true));closeSheet();await refresh();toast(`${r.add} added, ${r.upd} updated${r.errors.length?', '+r.errors.length+' rows skipped':''}`,7000);break}
+  case 'dlErrors':{await run('Preparing…',loadXlsx);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(ui.dlErr.map(e=>({'Row in file':e.row,'SAP Code':e.code,'Name':e.name,'Problem':e.msg}))),'Errors');
+    download('Distributor_upload_errors.xlsx',new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));break}
+  case 'repExport':repExport();break;
   case 'editDist':distSheet(v);break;
-  case 'waSent':ui.waSent=ui.waSent||{};ui.waSent[v]=1;setTimeout(render,300);break;
+  case 'waSent':{const ids=JSON.parse(el.dataset.ids||'{}');call('logReminder',token,v,'whatsapp',ids.leads||[],ids.reqs||[]).then(r=>{S.reminders=r;render()}).catch(err=>toast(err.message));break}
+  case 'waMail':{const it=waItems().find(x=>x.d.code===v);if(!it)return;const ids=waIds(it.m);
+    if(!confirm(`Email this reminder to ${it.d.name} (${it.d.email})?`))return;
+    const r=await run('Sending…',()=>call('emailReminder',token,v,waText(it.d,it.m),ids.leads,ids.reqs));S.reminders=r.reminders;render();toast(r.status==='Queued'?'Reminder queued: goes from your Outlook within 5 minutes':'Reminder emailed');break}
+  case 'myAcc':myAccSheet();break;
+  case 'nPer':ui.nPer=v;render();break;
   case 'bulk':{const sel=$('#bulkAct').value;if(!sel)return toast('Choose a change first.');
     const [key,on]=sel.split(':'),val=on==='1',list=distFiltered(),lab={active:'Active',dct:'DCT',ads:'Aadhaar deseeding'}[key];
     const change=list.filter(d=>!!d[key]!==val);if(!change.length)return toast('Nothing to change: all shown already have '+lab+' '+(val?'on':'off')+'.');
@@ -1061,7 +1200,7 @@ document.addEventListener('click',async e=>{
     toast('Lead assigned to '+r.lead.distName+(r.pinAdded?'. Pin '+r.lead.pin+' saved for future leads':'')+(r.alsoAssigned?', plus '+r.alsoAssigned+' more':''),6000);break}
   case 'sync':{const r=await run('Checking the Meta sheet…',()=>call('syncNavyaNow',token));N=r.data;render();toast(r.added?r.added+' new lead'+(r.added>1?'s':'')+' added':'No new leads');break}
   case 'export':{await run('Preparing Excel…',loadXlsx);
-    const rows=N.leads.map(l=>({'Enquiry date':fmtT(l.date),'Name':l.name,'Mobile':l.phone,'Pin code':l.pin,'Area':l.area,'Has LPG':l.hasLpg,'Platform':l.platform,'Distributor':l.distName,'Dist code':l.code,'Status':l.status,'Contacted':fmtT(l.contactedAt),'Visited':fmtT(l.visitedAt),'Closed':fmtT(l.closedAt),'Consumer no':l.consumerNo,'Connection type':l.connType,'Reject reason':l.reason,'Remarks':l.remarks,'Updated by':l.updatedBy}));
+    const rows=(S.role==='so'?navyaFiltered():N.leads).map(l=>({'Enquiry date':fmtT(l.date),'Name':l.name,'Mobile':l.phone,'Pin code':l.pin,'Area':l.area,'Has LPG':l.hasLpg,'Platform':l.platform,'Distributor':l.distName,'Dist code':l.code,'Status':l.status,'Contacted':fmtT(l.contactedAt),'Visited':fmtT(l.visitedAt),'Closed':fmtT(l.closedAt),'Consumer no':l.consumerNo,'Connection type':l.connType,'Reject reason':l.reason,'Remarks':l.remarks,'Updated by':l.updatedBy}));
     const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Navya leads');
     download(`Navya_Leads_${stamp()}.xlsx`,new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));toast(rows.length+' leads exported');break}
   }}catch(err){}
@@ -1092,6 +1231,88 @@ document.addEventListener('submit',async e=>{
     if(S.role==='dist')S.navya.fresh=N.leads.filter(x=>x.status==='New').length;render();toast('Update saved')}
   catch(err){ui.busy=false;showErr('leadErr',err.message)}
 });
+
+/* =====================================================================
+   RO-WIDE: view-only lock, distributor template upload, reports
+   ===================================================================== */
+const VIEW_BLOCK=new Set(['act','activateShown','addDist','archive','backup','bulk','delBackup','doImport','editDist','editPins','reassign','removeAdmin','resetAdmin','resetPin','restore','restoreDrive','scanNow','sync','waSent','cancelTransfer','dlCommit','dlTemplate','pickSt','waMail']);
+function lockUI(root){
+  if(!root||canEdit())return;
+  root.querySelectorAll('[data-a],[data-n]').forEach(el=>{if(VIEW_BLOCK.has(el.dataset.a||el.dataset.n))el.style.display='none'});
+  root.querySelectorAll('label[for="upDB"],label[for="upDL"],.bulk').forEach(el=>el.style.display='none');
+  root.querySelectorAll('[data-tog],[data-uedit],[data-urole]').forEach(el=>el.disabled=true);
+  root.querySelectorAll('#leadForm,#distForm,#pinsForm,#adminForm').forEach(f=>f.querySelectorAll('button:not([type="button"]),input,select,textarea').forEach(el=>el.disabled=true));
+}
+
+async function readDistTemplate(file){
+  await loadXlsx();
+  const wb=XLSX.read(new Uint8Array(await file.arrayBuffer()),{type:'array'});
+  const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:'',raw:false});
+  const hi=rows.slice(0,10).findIndex(r=>r.some(c=>/sap|code/i.test(String(c))));
+  if(hi<0)throw new Error('No heading row with "SAP Code" found in the first sheet. Use the template.');
+  const h=rows[hi].map(c=>String(c).trim().toLowerCase());
+  const find=re=>h.findIndex(c=>re.test(c));
+  const c={code:find(/sap|^code|distributor code/),name:find(/^name$|distributor name|^name/),sa:find(/sales area/),district:find(/district/),ro:find(/regional|^ro$/),market:find(/market/),mobile:find(/mobile|phone/),email:find(/e-?mail/)};
+  if(c.code<0)throw new Error('The "SAP Code" column is missing.');
+  const out=[];
+  for(let i=hi+1;i<rows.length;i++){const r=rows[i];if(!r.some(x=>String(x).trim()))continue;
+    const g=k=>c[k]>=0?String(r[c[k]]==null?'':r[c[k]]).trim():'';
+    out.push({row:i+1,code:g('code'),name:g('name'),sa:g('sa'),district:g('district'),ro:g('ro'),market:g('market'),mobile:g('mobile'),email:g('email')})}
+  if(!out.length)throw new Error('No distributor rows below the heading.');
+  return out;
+}
+function dlPreview(r){
+  ui.dlErr=r.errors;ui.sheet={kind:'dlprev'};
+  const n=r.add+r.upd;
+  openSheet(head('Upload check','Distributor file')+`<div class="card">
+    <div class="tiles" style="margin:0"><div class="tile c-green"><b>${r.add}</b><span>New</span></div><div class="tile c-brand"><b>${r.upd}</b><span>Will be updated</span></div><div class="tile"><b>${r.same}</b><span>No change</span></div><div class="tile ${r.errors.length?'c-red':''}"><b>${r.errors.length}</b><span>Rows with problems</span></div></div>
+    ${r.errors.length?`<h3 style="margin-top:1rem">Problems (these rows are skipped)</h3><div class="ntable-wrap"><table class="mtable"><thead><tr><th>Row</th><th>SAP code</th><th>Problem</th></tr></thead><tbody>${r.errors.slice(0,25).map(e=>`<tr><td>${e.row}</td><td>${esc(e.code)}</td><td>${esc(e.msg)}</td></tr>`).join('')}</tbody></table></div>${r.errors.length>25?`<p class="small muted">…and ${r.errors.length-25} more. Download the list to see all.</p>`:''}`:''}
+    <p class="small muted" style="margin-top:.75rem">New distributors are added as inactive. Blank cells in the file do not erase saved details.</p>
+    <div class="actions" style="margin-top:.75rem">${n?`<button class="btn primary" data-n="dlCommit">Save ${n} change${n>1?'s':''}</button>`:''}${r.errors.length?'<button class="btn" data-n="dlErrors">Download problem rows</button>':''}<button class="btn" data-a="close">Cancel</button></div></div>`);
+}
+
+/* ---------- reports ---------- */
+function repData(){
+  const bySa=isSuper()&&!ui.rpSa, inSa=sa=>!ui.rpSa||sa===ui.rpSa;
+  const dists=S.dists.filter(d=>inSa(d.sa));
+  const keyOf=(sa,code,name)=>bySa?(sa||'(no sales area)'):(code?name||code:'(unassigned)');
+  const grp=bySa?'Sales area':'Distributor';
+  const T={},R={},D={};
+  const days=(a,b)=>(new Date(b)-new Date(a))/864e5, now=new Date().toISOString(), cut90=Date.now()-90*864e5;
+  (N&&N.leads||[]).filter(l=>inSa(l.sa)).forEach(l=>{const k=keyOf(l.sa,l.code,l.distName);const t=T[k]=T[k]||{k,leads:0,un:0,cont:0,vis:0,conv:0,rej:0,late:0};
+    t.leads++;if(!l.code)t.un++;if(l.contactedAt)t.cont++;if(l.visitedAt)t.vis++;if(l.status==='Converted')t.conv++;if(l.status==='Rejected')t.rej++;if(l.code&&nLate(l))t.late++});
+  S.requests.forEach(r=>{const d=dist(r.code);if(!inSa(d.sa))return;const k=keyOf(d.sa,d.code,d.name);const t=R[k]=R[k]||{k,open:0,withSo:0,withDist:0,old:0,closed90:0,tatSum:0,tatN:0};
+    if(['SUB','REV','RSB','RSR'].includes(r.status)){t.open++;if(r.status==='RSR')t.withDist++;else t.withSo++;if(days(r.updatedAt,now)>5)t.old++}
+    else{const h=(r.history||[]).filter(x=>x.s==='CMP'||x.s==='REJ').pop();const at=h?h.at:r.updatedAt;if(new Date(at)>cut90){t.closed90++;t.tatSum+=days(r.createdAt,at);t.tatN++}}});
+  dists.forEach(d=>{const k=keyOf(d.sa,d.code,d.name);const t=D[k]=D[k]||{k,total:0,active:0,noMob:0,dct:0,navya:0};
+    t.total++;if(d.active)t.active++;if(!d.mobile)t.noMob++;if(d.dct)t.dct++;if(S.pins&&(S.pins[d.code]||[]).length)t.navya++});
+  const sort=o=>Object.values(o).sort((a,b)=>String(a.k).localeCompare(String(b.k)));
+  return {grp,navya:sort(T),req:sort(R),dist:sort(D)};
+}
+function repTable(cols,rows,total){
+  const tot=total?cols.map((c,i)=>i===0?'Total':c.sum?rows.reduce((a,r)=>a+(+c.v(r)||0),0):c.tot?c.tot(rows):''):null;
+  return `<div class="card ntable-wrap"><table class="mtable ntable"><thead><tr>${cols.map(c=>`<th>${c.h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${cols.map(c=>`<td class="${c.hot&&c.hot(r)?'late':''}">${esc(c.v(r))}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}" class="muted">No data</td></tr>`}${tot&&rows.length?`<tr class="tot">${tot.map(x=>`<td><b>${esc(x)}</b></td>`).join('')}</tr>`:''}</tbody></table></div>`;
+}
+const pct=(a,b)=>b?Math.round(a*100/b)+'%':'–';
+function repCols(g){return {
+  navya:[{h:g,v:r=>r.k},{h:'Leads',v:r=>r.leads,sum:1},{h:'Unassigned',v:r=>r.un,sum:1,hot:r=>r.un>0},{h:'Contacted',v:r=>r.cont,sum:1},{h:'Visited',v:r=>r.vis,sum:1},{h:'Converted',v:r=>r.conv,sum:1},{h:'Rejected',v:r=>r.rej,sum:1},{h:'Conv %',v:r=>pct(r.conv,r.leads),tot:rs=>pct(rs.reduce((a,r)=>a+r.conv,0),rs.reduce((a,r)=>a+r.leads,0))},{h:'Over 24 h',v:r=>r.late,sum:1,hot:r=>r.late>0}],
+  req:[{h:g,v:r=>r.k},{h:'Open',v:r=>r.open,sum:1},{h:'With officer',v:r=>r.withSo,sum:1},{h:'With distributor',v:r=>r.withDist,sum:1},{h:'Untouched > 5 days',v:r=>r.old,sum:1,hot:r=>r.old>0},{h:'Closed (90 days)',v:r=>r.closed90,sum:1},{h:'Avg days to close',v:r=>r.tatN?(r.tatSum/r.tatN).toFixed(1):'–',tot:rs=>{const n=rs.reduce((a,r)=>a+r.tatN,0);return n?(rs.reduce((a,r)=>a+r.tatSum,0)/n).toFixed(1):'–'}}],
+  dist:[{h:g,v:r=>r.k},{h:'Distributors',v:r=>r.total,sum:1},{h:'Active',v:r=>r.active,sum:1},{h:'Inactive',v:r=>r.total-r.active,sum:1},{h:'No mobile',v:r=>r.noMob,sum:1,hot:r=>r.noMob>0},{h:'DCT',v:r=>r.dct,sum:1},{h:'With Navya pin codes',v:r=>r.navya,sum:1}]}}
+function soReports(){
+  if(!N){loadNavya();return '<div class="empty">Loading reports…</div>'}
+  const d=repData(),C=repCols(d.grp);
+  return `<section class="hello"><div><h1>Reports</h1><p class="muted">${isSuper()?(ui.rpSa?esc(ui.rpSa):'All sales areas, '+esc(S.roName||'RO')):esc(S.me.sa)}. Counts are live; refresh to update.</p></div><div class="actions"><button class="btn" data-n="repExport">Export to Excel</button></div></section>
+    ${isSuper()?`<div class="filters"><select data-f="rpSa" aria-label="Sales area">${opts(uniq(S.dists.map(x=>x.sa)),ui.rpSa,'All sales areas (one row each)')}</select></div>`:''}
+    <h2 class="rep-h">Navya leads</h2>${repTable(C.navya,d.navya,1)}
+    <h2 class="rep-h">Requests</h2>${repTable(C.req,d.req,1)}
+    <h2 class="rep-h">Distributor data</h2>${repTable(C.dist,d.dist,1)}`;
+}
+async function repExport(){
+  await run('Preparing Excel…',loadXlsx);const d=repData(),C=repCols(d.grp),wb=XLSX.utils.book_new();
+  [['Navya leads',C.navya,d.navya],['Requests',C.req,d.req],['Distributor data',C.dist,d.dist]].forEach(([n,cols,rows])=>{
+    const aoa=[cols.map(c=>c.h)].concat(rows.map(r=>cols.map(c=>c.v(r))));XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa),n)});
+  download(`Distributor_Connect_Reports_${stamp()}.xlsx`,new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));toast('Reports exported');
+}
 
 (async function init(){
   if(token){try{await refresh();return}catch(e){setToken(null)}}
