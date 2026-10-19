@@ -393,7 +393,7 @@ const ui={loginRole:'dist',lastCode:'',lastEmail:'',dFilter:'all',soTab:'req',bu
 const dist=code=>(S&&S.dists||[]).find(d=>d.code===code)||(S&&S.me&&S.me.code===code?S.me:{code,name:code,district:'',sa:'',ro:'',email:code+'@hpgas.hpcl.in'});
 /* Official logo (optional): put the HP Gas logo file in the GitHub repo next to index.html, e.g. logo.svg,
    and set its full address here. Keep it small (SVG or PNG under 20 KB). Empty = text badge, no image to load. */
-const LOGO_URL='https://vado-gas-portal.github.io/Portal/logo.svg';
+const LOGO_URL='';
 const brandBadge=cls=>LOGO_URL?`<img class="${cls}" src="${LOGO_URL}" alt="HP Gas" height="32" decoding="async" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} hpbadge',textContent:'HP GAS'}))">`:`<span class="${cls} hpbadge">HP GAS</span>`;
 const isSuper=()=>!!(S&&S.sup);
 const canEdit=()=>!S||S.role!=='so'||S.edit!==false;
@@ -1177,7 +1177,10 @@ document.addEventListener('click',async e=>{
   case 'waSent':{const ids=JSON.parse(el.dataset.ids||'{}');call('logReminder',token,v,'whatsapp',ids.leads||[],ids.reqs||[]).then(r=>{S.reminders=r;render()}).catch(err=>toast(err.message));break}
   case 'waMail':{const it=waItems().find(x=>x.d.code===v);if(!it)return;const ids=waIds(it.m);
     if(!confirm(`Email this reminder to ${it.d.name} (${it.d.email})?`))return;
-    const r=await run('Sending…',()=>call('emailReminder',token,v,waText(it.d,it.m),ids.leads,ids.reqs));S.reminders=r.reminders;render();toast(r.status==='Queued'?'Reminder queued: goes from your Outlook within 5 minutes':'Reminder emailed');break}
+    const L=it.m.leads.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    const data={leadTotal:L.length,leads:L.slice(0,40).map(l=>({name:l.name,phone:String(l.phone||'').replace(/^\+91/,''),pin:l.pin,area:l.area,age:nAgeTxt(l),rem:remN('leads',l.id)})),
+      reqs:it.m.rsr.map(id=>({id,rem:remN('reqs',id)})),stale:it.m.stale.map(l=>({name:l.name,status:l.status,age:l.updatedAt?fmt(l.updatedAt):nAgeTxt(l)}))};
+    const r=await run('Sending…',()=>call('emailReminder',token,v,waText(it.d,it.m),ids.leads,ids.reqs,data));S.reminders=r.reminders;render();toast(r.status==='Queued'?'Reminder queued: goes from your Outlook within 5 minutes':'Reminder emailed');break}
   case 'myAcc':myAccSheet();break;
   case 'nPer':ui.nPer=v;render();break;
   case 'bulk':{const sel=$('#bulkAct').value;if(!sel)return toast('Choose a change first.');
