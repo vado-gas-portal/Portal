@@ -467,9 +467,9 @@ function transferBanner(){
     <div class="err" id="acceptErr" hidden></div></form>`;
 }
 function soView(){
-  const tabs=[['req','Requests'],['navya','Navya leads'],['wa','Reminders'],['rep','Reports'],['dist','Distributors']].concat(canUsers()?[['bulk','Bulk actions'],['acc','Request access'],['off','Officers'],['bak','Backup'],['log','Logs']]:[]);
+  const tabs=[['req','Requests'],['navya','Navya leads'],['wa','Reminders'],['rep','Reports'],['dist','Distributors']].concat(canUsers()?[['bulk','Bulk actions'],['acc','Request access'],['off','Officers'],['bak','Backup'],['log','Logs']]:[]).concat(isBarodaSA()?[['desk','SO Desk']]:[]);
   const SUPER_TABS=['bulk','acc','off','bak','log'];if(SUPER_TABS.includes(ui.soTab)&&!canUsers())ui.soTab='req';
-  const body={navya:soNavya,wa:soWa,rep:soReports,dist:soDists,bulk:soBulk,acc:soAccess,off:soOfficers,bak:soBackup,log:soLogs}[ui.soTab]||soRequests;
+  const body={navya:soNavya,wa:soWa,rep:soReports,dist:soDists,bulk:soBulk,acc:soAccess,off:soOfficers,bak:soBackup,log:soLogs,desk:soDesk}[ui.soTab]||soRequests;
   const q=(S.quota<20?`<div class="note">Only ${S.quota} emails left today on the portal account. Emails resume tomorrow.</div>`:'')+(S.edit===false?'<div class="note">You have view-only access. Ask the super admin to switch on Edit.</div>':'');
   return bar()+`<main class="wrap">${transferBanner()}${q}<nav class="tabs" aria-label="Sections">${tabs.map(([k,l])=>`<button data-a="tab" data-v="${k}" ${ui.soTab===k?'aria-current="page"':''}>${l}</button>`).join('')}<button data-a="reload" style="margin-left:auto" aria-label="Refresh">Refresh</button></nav>${body()}</main>`;
 }
@@ -688,7 +688,7 @@ function soBackup(){
   </div>
   ${S.archives.length?`<h3>Archive history</h3><div class="card">${S.archives.map(a=>`<div class="logrow"><span class="muted">${fmtT(a.at)}</span><span>${esc(a.what)}</span></div>`).join('')}</div>`:''}`;
 }
-function soLogs(){
+const SO_DESK_URL='https://docs.google.com/document/d/1GzQ2fI0GniHs67nN68Foji-jOUdKNoXgC6A0_ntrcp4/edit';function isBarodaSA(){return !!(S&&S.role==='so'&&S.me&&/baroda/i.test(S.me.sa||''));}function soDesk(){if(!isBarodaSA())return soRequests();return `<section class="hello"><div><h1>Vadodara LPG SO Desk</h1><p class="muted">Dashboards for MDM School / NDE, PNG Registration, Aadhaar Deseed, Modify SV, Unblock Connection and PMUY Ration Card Update.</p></div></section><div class="card"><p>The dashboard links are kept in a private Google Doc. Open it while signed in to Google as <strong>vadolpgso.hpcl@gmail.com</strong>.</p><div class="actions"><a class="btn primary" href="${SO_DESK_URL}" target="_blank" rel="noopener">Open SO Desk</a></div></div>`;} function soLogs(){
   return `<section class="hello"><div><h1>Logs</h1><p class="muted">Logins, approvals, uploads, backups and every email are recorded. ${S.quota} emails left today.</p></div></section>
   <div class="seg" role="group" aria-label="Log type"><button data-a="logView" data-v="act" aria-pressed="${ui.logView==='act'}">Activity (${S.logs.length})</button><button data-a="logView" data-v="mail" aria-pressed="${ui.logView==='mail'}">Emails (${S.mails.length})</button></div>
   <div class="card">${ui.logView==='act'
