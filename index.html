@@ -1052,13 +1052,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#preview').cl
    NAVYA LEADS (distributor tab + officer tab)
    ===================================================================== */
 let N=null,nLoading=false;
-Object.assign(ui,{dTab:'req',nBucket:'all',nq:'',nDist:'',nSa:'',rpSa:'',nPick:'New',nPer:'all',nFrom:'',nTo:''});
+Object.assign(ui,{dTab:'req',nBucket:'all',nq:'',nDist:'',nCamp:'',nSa:'',rpSa:'',nPick:'New',nPer:'all',nFrom:'',nTo:''});
 const PERIODS=[['all','All'],['1m','Last 1 month'],['3m','Last quarter'],['1y','Last year'],['custom','Custom dates']];
 function periodRange(){const now=new Date(),back=m=>{const d=new Date(now);d.setMonth(d.getMonth()-m);return d};
   if(ui.nPer==='1m')return [back(1),null];if(ui.nPer==='3m')return [back(3),null];if(ui.nPer==='1y')return [back(12),null];
   if(ui.nPer==='custom')return [ui.nFrom?new Date(ui.nFrom+'T00:00:00'):null,ui.nTo?new Date(ui.nTo+'T23:59:59'):null];return [null,null]}
 function inPeriod(l){const [a,b]=periodRange(),d=new Date(l.date);return (!a||d>=a)&&(!b||d<=b)}
-function navyaFiltered(){return N.leads.filter(l=>(!ui.nDist||l.code===ui.nDist)&&(!ui.nSa||l.sa===ui.nSa)&&inPeriod(l))}
+function navyaFiltered(){return N.leads.filter(l=>(!ui.nDist||l.code===ui.nDist)&&(!ui.nSa||l.sa===ui.nSa)&&(!ui.nCamp||(ui.nCamp==='-'?!l.campaign:l.campaign===ui.nCamp))&&inPeriod(l))}
+const nCamps=()=>uniq(N.leads.map(l=>l.campaign).filter(Boolean));
 function periodBar(){return `<div class="seg" role="group" aria-label="Period">${PERIODS.map(([k,l])=>`<button data-n="nPer" data-v="${k}" aria-pressed="${ui.nPer===k}">${l}</button>`).join('')}</div>${ui.nPer==='custom'?`<div class="filters"><label class="field" style="margin:0"><span>From</span><input type="date" data-f="nFrom" value="${esc(ui.nFrom)}"></label><label class="field" style="margin:0"><span>To</span><input type="date" data-f="nTo" value="${esc(ui.nTo)}"></label></div>`:''}`}
 const N_STEPS=['New','Contacted','Visited','Converted'];
 const N_COL={New:'brand',Contacted:'violet',Visited:'teal',Converted:'green',Rejected:'grey'};
@@ -1076,11 +1077,11 @@ function leadRow(l,so){
   const idx=rej?N_STEPS.indexOf(l.visitedAt?'Visited':l.contactedAt?'Contacted':'New'):N_STEPS.indexOf(l.status);
   const wa=String(l.phone||'').replace(/\D/g,'');
   return `<div class="row lead c-${late?'red':N_COL[l.status]||'grey'}">
-    <div class="row-top"><strong class="lead-name">${esc(l.name||'(no name)')}</strong><span class="chip c-${N_COL[l.status]||'grey'}">${esc(l.status)}</span></div>
+    <div class="row-top"><strong class="lead-name">${esc(l.name||'(no name)')}</strong><span>${l.campaign?`<span class="chip c-amber" title="${esc(l.gift)}">${esc(l.campaign)}</span> `:''}<span class="chip c-${N_COL[l.status]||'grey'}">${esc(l.status)}</span></span></div>
     <div class="row-meta">${so?`<span>${l.code?esc(l.distName):'<b class="late">Not assigned</b>'+(l.sa?' ('+esc(l.sa)+')':l.district?' ('+esc(l.district)+')':'')}</span>`:''}<span>${esc([l.pin,l.area].filter(Boolean).join(', '))}</span>${l.hasLpg?`<span>Has LPG: ${esc(l.hasLpg)}</span>`:''}<span class="${late?'late':''}">${nAgeTxt(l)}</span></div>
     ${l.dupOf?'<div class="row-meta"><span class="late">Same mobile number as an earlier lead</span></div>':''}
     <div class="track${rej?' rej':''}">${N_STEPS.map((s,i)=>`<i class="${i<=idx?'on':''}">${s}</i>`).join('')}</div>
-    ${l.status==='Converted'?`<div class="small">Consumer no <b>${esc(l.consumerNo)}</b>, ${esc(l.connType)}</div>`:''}
+    ${l.status==='Converted'?`<div class="small">Consumer no <b>${esc(l.consumerNo)}</b>, ${esc(l.connType)}${l.hpPay?`, HP Pay: <b>${esc(l.hpPay)}</b>`:''}${l.gift&&l.giftGiven?`, gift given: <b>${esc(l.giftGiven)}</b>`:''}</div>`:''}
     ${rej?`<div class="small">Rejected: <b>${esc(l.reason)}</b></div>`:''}
     ${l.remarks?`<div class="small muted">${esc(l.remarks)}</div>`:''}
     <div class="actions lead-acts">${l.phone?`<a class="btn sm" href="tel:${esc(l.phone)}">Call</a><a class="btn sm" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}<button class="btn sm primary" data-n="openLead" data-v="${esc(l.id)}">Update</button></div>
@@ -1112,18 +1113,22 @@ function soNavya(){
   const tiles=[['all','All leads',''],['as','Assigned','brand'],['un','Unassigned','amber'],['New','Not contacted','brand'],['late','Over 24 h','red'],['Contacted','Contacted','violet'],['Visited','Visited','teal'],['Converted','Converted','green'],['Rejected','Rejected','grey']];
   const off=(N.navyaDists||[]).filter(d=>!d.active);
   const conv=c.all?Math.round(c.Converted*100/c.all):0;
-  let h=`<section class="hello"><div><h1>Navya leads</h1><p class="muted">${c.all} leads, ${c.Converted} converted (${conv}%)</p></div><div class="actions"><button class="btn" data-n="sync">Get new leads now</button><button class="btn" data-n="export">Export to Excel</button></div></section>`;
+  const hp=all.filter(l=>l.status==='Converted'&&l.hpPay==='Yes').length;
+  let h=`<section class="hello"><div><h1>Navya leads</h1><p class="muted">${c.all} leads, ${c.Converted} converted (${conv}%)${c.Converted?`, ${hp} paid via HP Pay`:''}</p></div><div class="actions"><button class="btn" data-n="sync">Get new leads now</button><button class="btn" data-n="export">Export to Excel</button></div></section>`;
   h+=periodBar();
   if(!N.sourceSet)h+='<div class="note">The Meta leads sheet is not linked yet. Fill NAVYA.SOURCE_ID in Code.gs.</div>';
   if(!N.mailOn)h+='<div class="note">Lead emails to distributors are off. Set NAVYA.MAIL_ON to true in Code.gs after testing.</div>';
   if(off.length)h+=`<div class="note">${off.length} Navya distributor${off.length>1?'s are':' is'} not active and can't log in: ${off.map(d=>esc(d.name)).join(', ')}. Activate them in the Distributors tab.</div>`;
   h+=`<div class="tiles">${tiles.map(([k,l,col])=>`<button class="tile ${col?'c-'+col:''}" data-n="nBucket" data-v="${k}" aria-pressed="${ui.nBucket===k}"><b>${c[k]||0}</b><span>${l}</span></button>`).join('')}</div>
-    <div class="filters">${isSuper()?`<select data-f="nSa" aria-label="Sales area">${opts(uniq((N.navyaDists||[]).map(d=>d.sa).concat(N.leads.map(l=>l.sa).filter(Boolean))),ui.nSa,'All sales areas')}</select>`:''}<select data-f="nDist" aria-label="Distributor">${opts((N.navyaDists||[]).filter(d=>!ui.nSa||d.sa===ui.nSa).map(d=>[d.code,d.name]),ui.nDist,'All Navya distributors')}</select>
+    <div class="filters">${isSuper()?`<select data-f="nSa" aria-label="Sales area">${opts(uniq((N.navyaDists||[]).map(d=>d.sa).concat(N.leads.map(l=>l.sa).filter(Boolean))),ui.nSa,'All sales areas')}</select>`:''}<select data-f="nDist" aria-label="Distributor">${opts((N.navyaDists||[]).filter(d=>!ui.nSa||d.sa===ui.nSa).map(d=>[d.code,d.name]),ui.nDist,'All Navya distributors')}</select>${nCamps().length?`<select data-f="nCamp" aria-label="Campaign">${opts(nCamps().concat([['-','No campaign (pin code)']]),ui.nCamp,'All campaigns')}</select>`:''}
     <input data-f="nq" type="search" placeholder="Search name, mobile, area, consumer no" value="${esc(ui.nq)}" aria-label="Search leads"></div>`;
   if(ui.nBucket==='all'&&!ui.nDist&&!q){
     const by={};navyaFiltered().forEach(l=>{if(!l.code)return;const b=by[l.code]=by[l.code]||{name:l.distName,t:0,n:0,cv:0,rj:0,late:0};b.t++;if(l.status==='New')b.n++;if(l.status==='Converted')b.cv++;if(l.status==='Rejected')b.rj++;if(nLate(l))b.late++});
     const rows=Object.keys(by).sort((a,b)=>by[b].t-by[a].t);
     if(rows.length)h+=`<div class="card ntable-wrap"><table class="mtable ntable"><thead><tr><th>Distributor</th><th>Leads</th><th>New</th><th>Converted</th><th>Rejected</th><th>Over 24 h</th></tr></thead><tbody>${rows.map(k=>{const b=by[k];return `<tr data-n="pickDist" data-v="${k}"><td>${esc(b.name)}</td><td>${b.t}</td><td>${b.n}</td><td>${b.cv}</td><td>${b.rj}</td><td class="${b.late?'late':''}">${b.late}</td></tr>`}).join('')}</tbody></table></div>`;
+    const cb={};navyaFiltered().forEach(l=>{if(!l.campaign)return;const k=l.campaign+'|'+l.code,b=cb[k]=cb[k]||{camp:l.campaign,gift:l.gift,dist:l.distName,t:0,n:0,cv:0,gg:0,hp:0};b.t++;if(l.status==='New')b.n++;if(l.status==='Converted'){b.cv++;if(l.giftGiven==='Yes')b.gg++;if(l.hpPay==='Yes')b.hp++}});
+    const ck=Object.keys(cb);
+    if(ck.length)h+=`<h2 class="small muted" style="margin:1rem 0 .4rem">Campaigns</h2><div class="card ntable-wrap"><table class="mtable ntable"><thead><tr><th>Campaign</th><th>Leads</th><th>New</th><th>Converted</th><th>Gift given</th><th>Paid via HP Pay</th></tr></thead><tbody>${ck.map(k=>{const b=cb[k];return `<tr data-n="pickCamp" data-v="${esc(b.camp)}"><td>${esc(b.camp)}<div class="small muted">${esc(b.dist)}${b.gift?' · '+esc(b.gift):''}</div></td><td>${b.t}</td><td>${b.n}</td><td>${b.cv}</td><td>${b.gift?b.gg:'–'}</td><td>${b.hp}</td></tr>`}).join('')}</tbody></table></div>`;
     const rs={};navyaFiltered().forEach(l=>{if(l.status==='Rejected')rs[l.reason]=(rs[l.reason]||0)+1});
     const rk=Object.keys(rs).sort((a,b)=>rs[b]-rs[a]);
     if(rk.length)h+=`<p class="small muted" style="margin:.75rem 0">Rejection reasons: ${rk.map(k=>esc(k)+' '+rs[k]).join(', ')}</p>`;
@@ -1137,12 +1142,14 @@ function leadSheet(id){
   ui.sheet={kind:'lead',id};ui.nPick=l.status;const so=S.role==='so';
   const line=(k,v)=>v?`<dt>${k}</dt><dd>${v}</dd>`:'';
   openSheet(head('Enquiry '+fmtT(l.date),esc(l.name||'(no name)'))+
-    `<div class="card"><dl class="kv">${line('Mobile',l.phone?`<a href="tel:${esc(l.phone)}">${esc(l.phone)}</a>`:'')}${line('Pin code',esc(l.pin))}${line('Area',esc(l.area))}${line('Has LPG connection',esc(l.hasLpg))}${so?line('Distributor',esc(l.distName)||'Not assigned')+line('Lead email',esc(l.mail)):''}${line('Contacted',fmtT(l.contactedAt))}${line('Visited',fmtT(l.visitedAt))}${line('Closed',fmtT(l.closedAt))}${line('Last update',l.updatedAt?fmtT(l.updatedAt)+' by '+esc(l.updatedBy):'')}</dl></div>
+    `<div class="card"><dl class="kv">${line('Mobile',l.phone?`<a href="tel:${esc(l.phone)}">${esc(l.phone)}</a>`:'')}${line('Pin code',esc(l.pin))}${line('Area',esc(l.area))}${line('Has LPG connection',esc(l.hasLpg))}${line('Campaign',l.campaign?esc(l.campaign+(l.gift?' – '+l.gift:'')):'')}${so?line('Distributor',esc(l.distName)||'Not assigned')+line('Lead email',esc(l.mail)):''}${line('Contacted',fmtT(l.contactedAt))}${line('Visited',fmtT(l.visitedAt))}${line('Closed',fmtT(l.closedAt))}${line('Last update',l.updatedAt?fmtT(l.updatedAt)+' by '+esc(l.updatedBy):'')}</dl></div>
     <form id="leadForm" class="card" novalidate>
       <div class="field"><span>Status</span><div class="seg" id="nSt">${N.statuses.map(s=>`<button type="button" data-n="pickSt" data-v="${s}" aria-pressed="${s===l.status}">${s}</button>`).join('')}</div></div>
       <div id="nConv" ${l.status==='Converted'?'':'hidden'}>
         <label class="field"><span>Consumer number</span><input name="consumerNo" inputmode="numeric" value="${esc(l.consumerNo)}"></label>
-        <label class="field"><span>Connection type</span><select name="connType">${opts(N.connTypes,l.connType,'Select')}</select></label></div>
+        <label class="field"><span>Connection type</span><select name="connType">${opts(N.connTypes,l.connType,'Select')}</select></label>
+        <label class="field"><span>Paid through HP Pay?</span><select name="hpPay">${opts(N.yesNo||['Yes','No'],l.hpPay,'Select')}</select></label>
+        ${l.gift?`<label class="field"><span>Gift given (${esc(l.gift)})?</span><select name="giftGiven">${opts(N.yesNo||['Yes','No'],l.giftGiven,'Select')}</select></label>`:''}</div>
       <div id="nRej" ${l.status==='Rejected'?'':'hidden'}>
         <label class="field"><span>Reason for rejection</span><select name="reason">${opts(N.reasons,l.reason,'Select')}</select></label></div>
       <label class="field"><span>Remarks</span><textarea name="remarks" placeholder="What did the customer say?">${esc(l.remarks)}</textarea></label>
@@ -1193,6 +1200,7 @@ document.addEventListener('click',async e=>{
     toast(`${lab} ${val?'on':'off'} for ${r.n}${r.mails?', '+r.mails+' PINs emailed':''}${r.skipped?'. '+r.skipped+' left for tomorrow (email limit)':''}`,7000);break}
   case 'nBucket':ui.nBucket=v;render();break;
   case 'pickDist':ui.nDist=v;ui.nBucket='all';render();break;
+  case 'pickCamp':ui.nCamp=v;ui.nBucket='all';render();break;
   case 'reloadN':await run('Refreshing…',async()=>{N=await call('getNavya',token);S=await call('getState',token)});render();break;
   case 'openLead':leadSheet(v);break;
   case 'pickSt':ui.nPick=v;document.querySelectorAll('#nSt button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
@@ -1203,7 +1211,7 @@ document.addEventListener('click',async e=>{
     toast('Lead assigned to '+r.lead.distName+(r.pinAdded?'. Pin '+r.lead.pin+' saved for future leads':'')+(r.alsoAssigned?', plus '+r.alsoAssigned+' more':''),6000);break}
   case 'sync':{const r=await run('Checking the Meta sheet…',()=>call('syncNavyaNow',token));N=r.data;render();toast(r.added?r.added+' new lead'+(r.added>1?'s':'')+' added':'No new leads');break}
   case 'export':{await run('Preparing Excel…',loadXlsx);
-    const rows=(S.role==='so'?navyaFiltered():N.leads).map(l=>({'Enquiry date':fmtT(l.date),'Name':l.name,'Mobile':l.phone,'Pin code':l.pin,'Area':l.area,'Has LPG':l.hasLpg,'Platform':l.platform,'Distributor':l.distName,'Dist code':l.code,'Status':l.status,'Contacted':fmtT(l.contactedAt),'Visited':fmtT(l.visitedAt),'Closed':fmtT(l.closedAt),'Consumer no':l.consumerNo,'Connection type':l.connType,'Reject reason':l.reason,'Remarks':l.remarks,'Updated by':l.updatedBy}));
+    const rows=(S.role==='so'?navyaFiltered():N.leads).map(l=>({'Enquiry date':fmtT(l.date),'Name':l.name,'Mobile':l.phone,'Pin code':l.pin,'Area':l.area,'Has LPG':l.hasLpg,'Platform':l.platform,'Distributor':l.distName,'Dist code':l.code,'Status':l.status,'Contacted':fmtT(l.contactedAt),'Visited':fmtT(l.visitedAt),'Closed':fmtT(l.closedAt),'Consumer no':l.consumerNo,'Connection type':l.connType,'Paid via HP Pay':l.hpPay,'Campaign':l.campaign,'Gift':l.gift,'Gift given':l.giftGiven,'Lead form':l.formName,'Reject reason':l.reason,'Remarks':l.remarks,'Updated by':l.updatedBy}));
     const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Navya leads');
     download(`Navya_Leads_${stamp()}.xlsx`,new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));toast(rows.length+' leads exported');break}
   }}catch(err){}
@@ -1227,6 +1235,9 @@ document.addEventListener('submit',async e=>{
   if(ui.busy)return;const d=Object.fromEntries(new FormData(f));d.status=ui.nPick;
   if(d.status==='Converted'&&!/^\d{5,15}$/.test((d.consumerNo||'').trim()))return showErr('leadErr','Enter the consumer number (digits only).');
   if(d.status==='Converted'&&!d.connType)return showErr('leadErr','Choose the connection type.');
+  const nl=N.leads.find(x=>x.id===ui.sheet.id)||{};
+  if(d.status==='Converted'&&!d.hpPay)return showErr('leadErr','Say whether the customer paid through HP Pay.');
+  if(d.status==='Converted'&&nl.gift&&!d.giftGiven)return showErr('leadErr','Say whether the gift was given.');
   if(d.status==='Rejected'&&!d.reason)return showErr('leadErr','Choose the reason for rejection.');
   if(d.status==='Rejected'&&d.reason==='Other'&&!(d.remarks||'').trim())return showErr('leadErr','Write the reason in Remarks when you choose Other.');
   showErr('leadErr','');ui.busy=true;
